@@ -1,4 +1,19 @@
-const ChatBox = () => {
+import { useState } from "react";
+
+interface ChatBoxProps {
+  onSend : (message : string) => void
+}
+
+function ChatBox(prop : ChatBoxProps) {
+
+  const [message, setMessage] = useState("");
+
+  function handleSend(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    event.preventDefault();
+    prop.onSend(message);
+    setMessage("");
+  }
+
   return (
     <div className="input-group mb-3">
       <span className="input-group-text" id="basic-addon1">
@@ -7,11 +22,14 @@ const ChatBox = () => {
       <input
         type="text"
         className="form-control"
-        placeholder="Username"
-        aria-label="Username"
+        placeholder="Enter message ..."
+        aria-label="Enter message ..."
         aria-describedby="basic-addon1"
+        id="message_input"
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
       />
-      <button style={{width:'20%'}}>Send</button>
+      <button style={{width:'20%'}} onClick={(event) => handleSend(event)} disabled={message.trim() === ""}>Send</button>
     </div>
   );
 };
