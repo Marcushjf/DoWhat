@@ -15,6 +15,7 @@ function Room({ socket, user, room }: RoomProps) {
   const [messages, setMessages] = useState<
     { message: string; room: string; user: string; time: string }[]
   >([]);
+  const [players, setPlayers] = useState<string[]>([])
 
   function handleSend(message: string) {
     socket.emit("send_message", {
@@ -32,19 +33,23 @@ function Room({ socket, user, room }: RoomProps) {
     socket.on("alert", (alert_msg: string) => {
       console.log(alert_msg);
     });
+    socket.on('new_player', (players) => {
+      setPlayers(players);
+  });
   }, []);
 
   useEffect(() => {
     socket.off("chat_message").on("chat_message", (data) => {
       setMessages((prevMessages) => [...prevMessages, data]);
     });
+
   }, [socket]);
 
   return (
     <Fragment>
       <div className="row d-flex flex-row justify-content-center p-3">
         <div className="col-9">
-          <Game />
+          <Game players={players}/>
         </div>
         <div
           className="p-3 col-3 d-flex flex-column justify-content-center align-items-center"

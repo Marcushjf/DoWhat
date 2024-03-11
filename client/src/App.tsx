@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState} from 'react';
 import Room from './room/Room';
 import { io } from 'socket.io-client';
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 import Home from './home/Home';
 
 // interface Item {
@@ -42,15 +42,13 @@ const App: React.FC = () => {
   function join_room(params: {username: string, room_id: string}) {
     setRoom_id(params.room_id)
     setUsername(params.username)
-    socket.emit('join',(params.room_id))
-    console.log(`${username} joined room: ${room_id}`)
   }
 
   return(
     <BrowserRouter>
     <Fragment>
       <Routes>
-        <Route path='/' element={<Home join={join_room}/>}/>
+        <Route path='/' element={<Home join={join_room} socket={socket}/>}/>
         <Route path='/room/:room_id' element={<Room socket={socket} user={username} room={room_id}/>}/>
       </Routes>
     </Fragment>
