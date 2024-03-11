@@ -3,8 +3,7 @@ const http = require('http');  // Import http module
 const path = require('path');
 const socketIo = require('socket.io');
 const cors = require('cors');
-const { disconnect } = require('process');
-const { PassThrough } = require('stream');
+const {addPlayer, removePlayer} = require('./models/Room')
 
 const app = express();
 const server = http.createServer(app);  // Create an HTTP server
@@ -16,63 +15,24 @@ const io = socketIo(server, {
 
 const PORT = 3001;
 
-const items = [
-    {
-        name: "mike",
-        age: "16"
-    },
-    {
-        name: "mike",
-        age: "16"
-    },
-    {
-        name: "mike",
-        age: "16"
-    },
-]
-
-class Room {
-    constructor(players, size, id) {
-        this.players = players;
-        this.size = size;
-        this.id = id
-    }
-
-    addPlayer(player) {
-        // Check if the player is already in the room
-        if (!this.players.includes(player)) {
-            if(this.size<4){
-                this.size++;
-                this.players = [...this.players, player];
-            }
-            else{
-                console.log(`Room is already full.`);
-                return false
-            }    
-        } else {
-            console.log(`Player ${player} is already in the room.`);
-            return false
-        }
-        return true
-    }
-}
-
-function addPlayer(rooms, id, username){
-    for (i=0;i< rooms.length; i++){
-        if(rooms[i].id === id){
-            if(rooms[i].addPlayer(username)){
-                return rooms[i].players
-            }
-            return []
-        }
-    }
-    let newRoom = new Room([username], 1, id)
-    rooms.push(newRoom)
-    return newRoom.players
-}
+// const items = [
+//     {
+//         name: "mike",
+//         age: "16"
+//     },
+//     {
+//         name: "mike",
+//         age: "16"
+//     },
+//     {
+//         name: "mike",
+//         age: "16"
+//     },
+// ]
 
 
 var rooms = []
+var users = []
 
 io.on('connection', (socket) => {
     console.log('A user connected:', socket.id);
@@ -83,13 +43,13 @@ io.on('connection', (socket) => {
         
         // check
         let players = addPlayer(rooms, data.room_id, data.username);
-        console.log(players)
     
         if (players.length === 0) {
             io.to(socket.id).emit('join_status', false);  // Emit only to the specific socket
             return;
         }
-    
+        
+        users.push({username: data.username, room_id: data.room_id, socket_id: socket.id})
         socket.join(data.room_id);
         io.to(socket.id).emit('join_status', data.room_id);
         io.to(data.room_id).emit('new_player', players);
@@ -103,15 +63,33 @@ io.on('connection', (socket) => {
     })
 
     socket.on('disconnect', () => {
-        console.log("user disconnected", socket.id)
-    })
+        const dcUserIndex = users.findIndex(user => user.socket_id === socket.id);
+        if (dcUserIndex !== -1) {
+            const disconnectedUser = users[dcUserIndex];
+            
+            let update = removePlayer(rooms, disconnectedUser.username)
+            for (let i = 0; i < rooms.length; i++) {
+                if (rooms[i].size === 0) {
+                    rooms.splice(i, 1);
+                    i--; // Decrement i to account for the removed element
+                }
+            }
+            console.log(rooms)
+            io.to(update.room_id).emit('new_player', update.newList)
+            users.splice(dcUserIndex, 1);
+            console.log(`User ${disconnectedUser.username} disconnected from room ${disconnectedUser.room_id}`)
+        } else {
+            console.log("Unknown user disconnected", socket.id);
+        }
+    });
+    
 });
 
 app.use(cors())
 
-app.get('/api/items', (req, res) => {
-    res.send(items);
-});
+// app.get('/api/items', (req, res) => {
+//     res.send(items);
+// });
 
 server.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}`);
