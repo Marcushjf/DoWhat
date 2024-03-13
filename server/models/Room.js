@@ -1,4 +1,26 @@
-class Room {
+const mongoose = require('mongoose')
+
+const RoomSchema = mongoose.Schema(
+    {
+        name:{
+            type: String,
+            required: true,
+        },
+        size:{
+            type: Number,
+            required:true,
+            default:0
+        }
+    },
+    {
+        timestamps: true
+    }
+)
+
+const Room = mongoose.model("Room", RoomSchema)
+
+
+class Rooom {
     constructor(players, size, id) {
         this.players = players;
         this.size = size;
@@ -44,7 +66,7 @@ function addPlayer(rooms, id, username){
             return []
         }
     }
-    let newRoom = new Room([username], 1, id)
+    let newRoom = new Rooom([username], 1, id)
     rooms.push(newRoom)
     return newRoom.players
 }
@@ -58,4 +80,4 @@ function removePlayer(rooms, username) {
     return [];
 }
 
-module.exports = { addPlayer, removePlayer };
+module.exports = { addPlayer, removePlayer, Room };

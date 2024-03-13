@@ -1,9 +1,14 @@
 const express = require('express');
 const http = require('http');  // Import http module
 const path = require('path');
+const mongoose = require('mongoose')
 const socketIo = require('socket.io');
 const cors = require('cors');
 const {addPlayer, removePlayer} = require('./models/Room')
+const {Room }= require('./models/Room')
+
+const roomRoute = require('./routes/roomRoutes.js')
+const userRoute = require('./routes/userRoute.js')
 
 const app = express();
 const server = http.createServer(app);  // Create an HTTP server
@@ -14,22 +19,6 @@ const io = socketIo(server, {
 });  // Attach Socket.IO to the server
 
 const PORT = 3001;
-
-// const items = [
-//     {
-//         name: "mike",
-//         age: "16"
-//     },
-//     {
-//         name: "mike",
-//         age: "16"
-//     },
-//     {
-//         name: "mike",
-//         age: "16"
-//     },
-// ]
-
 
 var rooms = []
 var users = []
@@ -85,12 +74,26 @@ io.on('connection', (socket) => {
     
 });
 
+//middleware
 app.use(cors())
+app.use(express.json())
 
-// app.get('/api/items', (req, res) => {
-//     res.send(items);
-// });
+app.use("/api/room", roomRoute)
+app.use("/api/user", userRoute)
 
-server.listen(PORT, () => {
-    console.log(`Server is running at http://localhost:${PORT}`);
+app.get('/', (req, res) => {
+    res.send('Working');
 });
+
+mongoose.connect("mongodb+srv://marcushjf:Mzemrej9rOfKoDgx@backenddb.hh4ttxn.mongodb.net/?retryWrites=true&w=majority&appName=BackendDB")
+    .then(()=>{
+        console.log("Connected to database")
+        server.listen(PORT, () => {
+            console.log(`Server is running at http://localhost:${PORT}`);
+        });
+    })
+    .catch(()=>{
+        console.log("Connection failed")
+    })
+
+    
