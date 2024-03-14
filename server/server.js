@@ -9,6 +9,7 @@ const {Room }= require('./models/Room')
 
 const roomRoute = require('./routes/roomRoutes.js')
 const userRoute = require('./routes/userRoute.js')
+const occupantRoute = require('./routes/occupantRoute.js')
 
 const app = express();
 const server = http.createServer(app);  // Create an HTTP server
@@ -25,7 +26,10 @@ var users = []
 
 io.on('connection', (socket) => {
     console.log('A user connected:', socket.id);
-    io.emit('alert', `${socket.id} has joined the chat`)
+
+    socket.on('req_rooms',()=>{
+        io.to(socket.id).emit('res_rooms')
+    })
 
     socket.on('join', (data) => {
         console.log(`${data.username} joining room: ${data.room_id}`);
@@ -78,8 +82,11 @@ io.on('connection', (socket) => {
 app.use(cors())
 app.use(express.json())
 
+//api to access db
 app.use("/api/room", roomRoute)
 app.use("/api/user", userRoute)
+app.use("/api/occupant", occupantRoute)
+
 
 app.get('/', (req, res) => {
     res.send('Working');

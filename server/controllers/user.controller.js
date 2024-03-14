@@ -1,4 +1,5 @@
 const {User} = require('../models/User')
+const {Room} = require('../models/Room')
 
 const getUsers = async (req, res )=>{
     try {
@@ -74,11 +75,57 @@ const deleteAllUsers = async (req, res) => {
     }
 };
 
+const registerUser = async (req, res) => {
+    const { name, password} = req.body;
+
+    try {
+        // Check if the user already exists
+        const existingUser = await User.findOne({ name });
+
+        if (existingUser) {
+            return res.status(400).json({ message: 'User already exists.' });
+        }
+        // Create a new user using the addUser function
+        const newUser = await User.create(req.body)
+        console.log(`${newUser.name} has registered`)
+        res.status(201).json(newUser);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+const loginUser = async (req, res) => {
+    const { name, password} = req.body;
+    try {
+        // Check if a user with the provided username exists
+        const user = await User.findOne({ name });
+
+        // If no user found, return an error
+        if (!user) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+
+        // Check if the password is correct
+        if (user.password !== password) {
+            return res.status(401).json({ message: 'Invalid password.' });
+        }
+
+        // If username and password are correct, return success message or user data
+        console.log(`${user.name} has Logged in`)
+        res.status(200).json({ message: 'Login successful.', user });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+
 module.exports = {
     getUsers,
     getUserById,
     addUser,
     updateUser,
     deleteUser,
-    deleteAllUsers
+    deleteAllUsers,
+    registerUser,
+    loginUser,
 }

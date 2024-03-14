@@ -1,0 +1,90 @@
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+
+function Register() {
+
+    const [name, setName] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [error, setError] = useState('');
+    const navigate = useNavigate()
+
+    function handleRegister(event: React.FormEvent<HTMLFormElement>){
+
+        event.preventDefault(); // Prevent form submission
+
+        // Perform validation
+        if (!name || !password || !confirmPassword) {
+            setError('Please enter both username and password.');
+            return;
+        }
+
+        //check if password is entered correctly
+        if(password !== confirmPassword){
+            setError('Please confirm password again.');
+            return
+        }
+
+        // Make API call to authenticate user
+        fetch('http://localhost:3001/api/user/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name, password})
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Username already exists.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Handle successful login
+            console.log('Register successful:', data);
+            navigate('/')
+        })
+        .catch(error => {
+            // Handle login error
+            setError(error.message);
+        });
+
+    }
+
+    return (
+        <div className="container">
+            <div className="row justify-content-center mt-5">
+                <div className="col-md-6">
+                    <div className="card">
+                        <div className="card-header">Register</div>
+                        <div className="card-body">
+                            <form onSubmit={handleRegister}>
+                                <div className="mb-3">
+                                    <label htmlFor="username" className="form-label">Username <span className="text-danger">*</span></label>
+                                    <input type="text" className="form-control" id="username" onChange={e => setName(e.target.value)} placeholder="Enter your desired username" required />
+                                </div>
+                                <div className="mb-3">
+                                    <label htmlFor="password" className="form-label">Password <span className="text-danger">*</span></label>
+                                    <input type="password" className="form-control" id="password" onChange={e => setPassword(e.target.value)} placeholder="Enter your password" required />
+                                </div>
+                                <div className="mb-3">
+                                    <label htmlFor="confirmPassword" className="form-label">Confirm Password <span className="text-danger">*</span></label>
+                                    <input type="password" className="form-control" id="confirmPassword" onChange={e => setConfirmPassword(e.target.value)} placeholder="Confirm your password" required />
+                                </div>
+                                {error && <div className="alert alert-danger">{error}</div>}
+                                <div className="d-grid mb-3">
+                                    <button type="submit" className="btn btn-primary">Register</button>
+                                </div>
+                                <div className="text-center">
+                                    <p>Already have an account? <Link to="/">Login here</Link></p>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+export default Register;

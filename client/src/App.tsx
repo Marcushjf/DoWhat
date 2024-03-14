@@ -3,6 +3,8 @@ import Room from './room/Room';
 import { io } from 'socket.io-client';
 import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 import Home from './home/Home';
+import Login from './login/Login';
+import Register from './login/Register';
 
 // interface Item {
 //   name:string,
@@ -44,11 +46,18 @@ const App: React.FC = () => {
     setUsername(params.username)
   }
 
+  function login(userid: string){
+    setUsername(userid)
+    console.log(username)
+  } 
+
   return(
     <BrowserRouter>
     <Fragment>
       <Routes>
-        <Route path='/' element={<Home join={join_room} socket={socket}/>}/>
+        <Route path='/' element={<Login login={login}/>}/>
+        <Route path='/register' element={<Register/>}/>
+        <Route path='/home' element={<Home userid={username} socket={socket}/>}/>
         <Route path='/room/:room_id' element={<Room socket={socket} user={username} room={room_id}/>}/>
       </Routes>
     </Fragment>

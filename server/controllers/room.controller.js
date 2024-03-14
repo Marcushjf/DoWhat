@@ -1,13 +1,22 @@
 const {Room} = require('../models/Room.js')
+const{User} = require('../models/User.js')
+const{Occupant} = require('../models/Occupant.js')
 
-const getProducts = async (req, res )=>{
+const getProducts = async (req, res) => {
     try {
-        const rooms = await Room.find({})
-        res.status(200).json(rooms)
+        
+        const rooms = await Room.find({});
+        // const roomsData = [];
+        // for (let i = 0; i < rooms.length; i++) {
+        //     const obj = { room_name: rooms[i].room_name, size: rooms[i].size };
+        //     roomsData.push(obj);
+        // }
+        res.status(200).json(rooms);
     } catch (error) {
-        res.status(500).json({message:error.message})
+        res.status(500).json({ message: error.message });
     }
-}
+};
+
 
 const getProductById = async (req,res)=>{
     try {
@@ -20,8 +29,25 @@ const getProductById = async (req,res)=>{
 }
 
 const addRoom = async (req,res)=>{
+    const { room_name, userid } = req.body;
     try {
-        const room = await Room.create(req.body)
+
+        //check if room already exists
+        const existingRoom = await Room.findOne({room_name})
+        if(existingRoom){
+            return res.status(404).json({ message: 'Room already exists.' });
+        }
+
+        //check if user is registered
+        const user = await User.findOne({name: userid})
+
+        if(!user){
+            return res.status(404).json({message: 'User Not Found'})
+        }
+    
+        await Occupant.create({user:userid, room:room_name})
+        
+        const room = await Room.create({ room_name, size:1})
         res.status(200).json(room)
     } catch (error) {
         res.status(500).json({message:error.message})

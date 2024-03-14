@@ -1,21 +1,18 @@
 const mongoose = require('mongoose')
 
-const UserSchema = mongoose.Schema(
+const OccupantSchema = mongoose.Schema(
     {
-        name:{
+        user:{
             type: String,
             required: true,
         },
-        password:{
+        room:{
             type: String,
             required: true,
         },
     },
-    {
-        timestamps: true
-    }
 )
 
-const User = mongoose.model("User", UserSchema)
+const Occupant = mongoose.model("Occupant", OccupantSchema)
 
-module.exports = {User}
+module.exports = {Occupant}
