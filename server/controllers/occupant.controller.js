@@ -51,7 +51,7 @@ const leaveRoom = async (req, res) => {
         // Find the room and decrement its size by 1
         const updatedRoom = await Room.findOneAndUpdate(
             { room_name: room },
-            { $inc: { size: -1 } }, // Decrement size by 1
+            { $inc: { size: -1 }, $pull: { users: user } }, // Decrement size by 1
             { new: true } // Return the updated document
         );
 

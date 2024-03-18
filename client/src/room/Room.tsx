@@ -1,9 +1,10 @@
 import { Fragment } from "react/jsx-runtime";
 import ChatBox from "./ChatBox";
 import ChatDisplay from "./ChatDisplay";
-import { Socket, io } from "socket.io-client";
+import { Socket } from "socket.io-client";
 import { useEffect, useState } from "react";
 import Game from "./Game";
+import { useNavigate } from "react-router-dom";
 
 interface RoomProps {
   socket: Socket;
@@ -16,6 +17,7 @@ function Room({ socket, user, room }: RoomProps) {
     { message: string; room: string; user: string; time: string }[]
   >([]);
   const [players, setPlayers] = useState<string[]>([])
+  const navigate = useNavigate()
 
   function handleSend(message: string) {
     socket.emit("send_message", {
@@ -30,6 +32,10 @@ function Room({ socket, user, room }: RoomProps) {
   }
 
   useEffect(() => {
+
+    if(user===""){
+      navigate('/')
+    }
     socket.on("alert", (alert_msg: string) => {
       console.log(alert_msg);
     });

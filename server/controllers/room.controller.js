@@ -29,7 +29,7 @@ const getProductById = async (req,res)=>{
 }
 
 const addRoom = async (req,res)=>{
-    const { room_name, userid } = req.body;
+    const { room_name, userid, password } = req.body;
     try {
 
         //check if room already exists
@@ -47,7 +47,7 @@ const addRoom = async (req,res)=>{
     
         await Occupant.create({user:userid, room:room_name})
         
-        const room = await Room.create({ room_name, size:1})
+        const room = await Room.create({ room_name, password:password, size:1, users:[userid]})
         res.status(200).json(room)
     } catch (error) {
         res.status(500).json({message:error.message})
@@ -100,6 +100,35 @@ const deleteAllRooms = async (req, res) => {
     }
 };
 
+const joinRoom = async (req, res) => {
+    const { room_name, password, userid } = req.body;
+    try {
+        // Check if room exists
+        const existingRoom = await Room.findOne({ room_name });
+        if (!existingRoom) {
+            return res.status(404).json({ message: 'Room does not exist.' });
+        }
+
+        // Check if password is correct
+        if (existingRoom.password !== password) {
+            return res.status(404).json({ message: 'Password Incorrect.' });
+        }
+
+        // Create occupant
+        await Occupant.create({ user: userid, room: room_name });
+
+        // Update room
+        const updatedRoom = await Room.findOneAndUpdate(
+            { room_name },
+            { $push: { users: userid }, $inc: { size: 1 } },
+            { new: true }
+        );
+
+        res.status(200).json(updatedRoom);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
 
 
 
@@ -109,5 +138,6 @@ module.exports = {
     addRoom,
     updateRoom,
     deleteRoom,
-    deleteAllRooms
+    deleteAllRooms,
+    joinRoom
 }

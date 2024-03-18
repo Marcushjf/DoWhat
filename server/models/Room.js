@@ -6,10 +6,18 @@ const RoomSchema = mongoose.Schema(
             type: String,
             required: true,
         },
+        password:{
+            type: String,
+            required: true
+        },
         size:{
             type: Number,
             default:0
         },
+        users:{
+            type: Array,
+            default:[]
+        }
     },
     {
         timestamps: true

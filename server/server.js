@@ -28,27 +28,32 @@ io.on('connection', (socket) => {
     console.log('A user connected:', socket.id);
 
     socket.on('req_rooms',()=>{
-        io.to(socket.id).emit('res_rooms')
+        io.to(socket.id).emit('init')
     })
 
     socket.on('join', (data) => {
-        console.log(`${data.username} joining room: ${data.room_id}`);
-        
-        // check
-        let players = addPlayer(rooms, data.room_id, data.username);
-    
-        if (players.length === 0) {
-            io.to(socket.id).emit('join_status', false);  // Emit only to the specific socket
-            return;
-        }
-        
-        users.push({username: data.username, room_id: data.room_id, socket_id: socket.id})
-        socket.join(data.room_id);
-        io.to(socket.id).emit('join_status', data.room_id);
-        io.to(data.room_id).emit('new_player', players);
-        console.log(rooms);
+        console.log(`${data.username} joined room: ${data.room_name}`);
+        socket.join(data.room_name);
+        io.to(data.room_name).emit('res_rooms');
     });
-    
+
+    socket.on('leave', (data) => {
+        console.log(`${data.username} left room: ${data.room_name}`);
+        socket.leave(data.room_name);
+        io.to(data.room_name).emit('res_rooms');
+        io.to(socket.id).emit('res_rooms')
+    });
+
+    socket.on('socket_connect', (data)=>{
+        console.log(data)
+        for(i=0;i<data.length;i++){
+            socket.join(data[i])
+        }
+    })
+
+
+
+
 
     socket.on('send_message', (data)=>{
         console.log(data)
