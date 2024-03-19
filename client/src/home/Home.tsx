@@ -1,5 +1,4 @@
 import { Fragment, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Socket } from "socket.io-client";
 import RoomCard from "./RoomCard";
 import Notification from "./Notification";
@@ -9,6 +8,7 @@ import JoinRoomModal from "./JoinModal";
 interface HomeProps {
   userid: string;
   socket: Socket;
+  join: (room_name:string) => void
 }
 
 interface Room {
@@ -17,7 +17,7 @@ interface Room {
 }
 
 
-function Home({ userid, socket }: HomeProps) {
+function Home({ userid, socket, join }: HomeProps) {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [error, setError] = useState("");
   const [notif, setNotif] = useState("");
@@ -125,6 +125,7 @@ function Home({ userid, socket }: HomeProps) {
         })
         .then((data) => {
           setRooms(data);
+          console.log(data)
         })
         .catch((error) => {
           setError(error.message);
@@ -175,7 +176,7 @@ function Home({ userid, socket }: HomeProps) {
           <div className="row row-cols-1 row-cols-md-2 g-4">
             {rooms.map((room, index) => (
               <div key={index} className="col">
-                <RoomCard room={room} socket={socket} userid={userid}/>
+                <RoomCard room={room} socket={socket} userid={userid} join={join}/>
               </div>
             ))}
           </div>

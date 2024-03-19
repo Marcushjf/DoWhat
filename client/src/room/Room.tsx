@@ -5,6 +5,7 @@ import { Socket } from "socket.io-client";
 import { useEffect, useState } from "react";
 import Game from "./Game";
 import { useNavigate } from "react-router-dom";
+import TODO from "./TODO";
 
 interface RoomProps {
   socket: Socket;
@@ -13,49 +14,60 @@ interface RoomProps {
 }
 
 function Room({ socket, user, room }: RoomProps) {
-  const [messages, setMessages] = useState<
-    { message: string; room: string; user: string; time: string }[]
-  >([]);
-  const [players, setPlayers] = useState<string[]>([])
+  const [messages, setMessages] = useState([])
+  const [segments, setSegments] = useState<any[]>([])
+  const [tasks, setTasks] = useState<any[]>([])
+  const [error, setError] = useState([])
+
   const navigate = useNavigate()
 
+  useEffect(()=>{
+    socket.emit("req_segments");
+    socket.off("res_segments").on("res_segments", () => {
+      fetch(`http://localhost:3001/api/segment/${room}`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Error loading Rooms");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          setSegments(data);
+        })
+        .catch((error) => {
+          setError(error.message);
+        });
+    });
+    socket.off("res_tasks").on("res_tasks", () => {
+      fetch(`http://localhost:3001/api/task/get/${room}`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Error loading Rooms");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          setTasks(data);
+          console.log(data)
+        })
+        .catch((error) => {
+          setError(error.message);
+        });
+    });
+  },[socket])
+
   function handleSend(message: string) {
-    socket.emit("send_message", {
-      message: message,
-      room: room,
-      user: user,
-      time:
-        new Date(Date.now()).getHours().toString().padStart(2, '0') +
-        ":" +
-        new Date(Date.now()).getMinutes().toString().padStart(2, '0'),
-    });    
+    
   }
 
-  useEffect(() => {
-
-    if(user===""){
-      navigate('/')
-    }
-    socket.on("alert", (alert_msg: string) => {
-      console.log(alert_msg);
-    });
-    socket.on('new_player', (players) => {
-      setPlayers(players);
-  });
-  }, []);
-
-  useEffect(() => {
-    socket.off("chat_message").on("chat_message", (data) => {
-      setMessages((prevMessages) => [...prevMessages, data]);
-    });
-
-  }, [socket]);
+  
 
   return (
     <Fragment>
+      <div>{`${room}`}</div>
       <div className="row d-flex flex-row justify-content-center p-3">
-        <div className="col-9">
-          <Game players={players}/>
+        <div className="col-9" style={{height:'85vh'}}>
+          <TODO segments={segments} socket={socket} tasks={tasks} room={room}/>
         </div>
         <div
           className="p-3 col-3 d-flex flex-column justify-content-center align-items-center"

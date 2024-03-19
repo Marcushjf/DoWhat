@@ -10,6 +10,8 @@ const {Room }= require('./models/Room')
 const roomRoute = require('./routes/roomRoutes.js')
 const userRoute = require('./routes/userRoute.js')
 const occupantRoute = require('./routes/occupantRoute.js')
+const segmentRoute = require('./routes/segmentRoute.js')
+const taskRoute = require('./routes/taskRoute.js')
 
 const app = express();
 const server = http.createServer(app);  // Create an HTTP server
@@ -20,9 +22,6 @@ const io = socketIo(server, {
 });  // Attach Socket.IO to the server
 
 const PORT = 3001;
-
-var rooms = []
-var users = []
 
 io.on('connection', (socket) => {
     console.log('A user connected:', socket.id);
@@ -45,40 +44,26 @@ io.on('connection', (socket) => {
     });
 
     socket.on('socket_connect', (data)=>{
-        console.log(data)
         for(i=0;i<data.length;i++){
             socket.join(data[i])
         }
     })
 
+    socket.on('req_segments', ()=>{
+        io.to(socket.id).emit('res_segments')
+        io.to(socket.id).emit('res_tasks')
+    })
 
+    socket.on('add_task', (data)=>{
+        io.to(data.room_name).emit('res_tasks')
+    })
 
-
-
-    socket.on('send_message', (data)=>{
-        console.log(data)
-        io.to(data.room).emit('chat_message', data)
+    socket.on('add_segment', (data)=>{
+        io.to(data.room_name).emit('res_segments')
     })
 
     socket.on('disconnect', () => {
-        const dcUserIndex = users.findIndex(user => user.socket_id === socket.id);
-        if (dcUserIndex !== -1) {
-            const disconnectedUser = users[dcUserIndex];
-            
-            let update = removePlayer(rooms, disconnectedUser.username)
-            for (let i = 0; i < rooms.length; i++) {
-                if (rooms[i].size === 0) {
-                    rooms.splice(i, 1);
-                    i--; // Decrement i to account for the removed element
-                }
-            }
-            console.log(rooms)
-            io.to(update.room_id).emit('new_player', update.newList)
-            users.splice(dcUserIndex, 1);
-            console.log(`User ${disconnectedUser.username} disconnected from room ${disconnectedUser.room_id}`)
-        } else {
-            console.log("Unknown user disconnected", socket.id);
-        }
+        console.log("Unknown user disconnected", socket.id);
     });
     
 });
@@ -91,6 +76,8 @@ app.use(express.json())
 app.use("/api/room", roomRoute)
 app.use("/api/user", userRoute)
 app.use("/api/occupant", occupantRoute)
+app.use("/api/segment", segmentRoute)
+app.use("/api/task", taskRoute)
 
 
 app.get('/', (req, res) => {

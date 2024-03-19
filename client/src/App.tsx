@@ -41,9 +41,8 @@ const App: React.FC = () => {
   const [username, setUsername] = useState('')
   const [room_id, setRoom_id] = useState('')
 
-  function join_room(params: {username: string, room_id: string}) {
-    setRoom_id(params.room_id)
-    setUsername(params.username)
+  function join_room(room:string) {
+    setRoom_id(room)
   }
 
   function login(userid: string){
@@ -57,7 +56,7 @@ const App: React.FC = () => {
       <Routes>
         <Route path='/' element={<Login login={login}/>}/>
         <Route path='/register' element={<Register/>}/>
-        <Route path='/home' element={<Home userid={username} socket={socket}/>}/>
+        <Route path='/home' element={<Home userid={username} socket={socket} join={join_room}/>}/>
         <Route path='/room/:room_id' element={<Room socket={socket} user={username} room={room_id}/>}/>
       </Routes>
     </Fragment>

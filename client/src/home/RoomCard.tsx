@@ -6,6 +6,7 @@ interface RoomCardProps {
     room: Room,
     socket: Socket,
     userid: string
+    join: (room:string) => void
   }
 
 interface Room {
@@ -14,7 +15,7 @@ interface Room {
 }
   
 
-function RoomCard({ room, socket, userid }: RoomCardProps) {
+function RoomCard({ room, socket, userid, join }: RoomCardProps) {
     const [showModal, setShowModal] = useState(false);
     const navigate = useNavigate()
   
@@ -46,6 +47,7 @@ function RoomCard({ room, socket, userid }: RoomCardProps) {
     }
 
     function handleEnterRoom() {
+      join(room.room_name)
       navigate(`/room/${room.room_name}`)
     }
   
