@@ -37,7 +37,6 @@ const TODO = ({ segments, tasks, socket, room }: TODOProps) => {
         })
         .then(data => {
             socket.emit('add_segment',({room_name:room}))
-            console.log(data)
         })
         .catch(error => {
             // Handle error
@@ -59,7 +58,7 @@ const TODO = ({ segments, tasks, socket, room }: TODOProps) => {
     <div className="container border h-100 pt-3 ps-0 pe-0">
       <div className="row flex-nowrap overflow-auto w-100 h-100 m-0">
         {segments.map((segment, index) => (
-          <div key={index} className="" style={{ width: "365px" }}>
+          <div key={index} className="" style={{ width: "380px" }}>
             <Segment
               socket={socket}
               segment={segment}
@@ -72,7 +71,7 @@ const TODO = ({ segments, tasks, socket, room }: TODOProps) => {
             className="btn btn-primary ps-2 pe-2 w-100"
             onClick={addSegment}
           >
-            Add a Goal/Objective
+            <i className="bi bi-plus-lg"></i>Add a Goal/Objective
           </button>
         </div>
       </div>

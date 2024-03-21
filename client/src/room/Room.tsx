@@ -48,7 +48,6 @@ function Room({ socket, user, room }: RoomProps) {
         })
         .then((data) => {
           setTasks(data);
-          console.log(data)
         })
         .catch((error) => {
           setError(error.message);

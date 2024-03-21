@@ -41,23 +41,46 @@ const deleteAllSegments = async (req, res) => {
     }
 };
 
-const deleteSegment = async (req,res)=>{
+const deleteSegment = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const segment = await Segment.findByIdAndDelete(id);
+
+        if (!segment) {
+            return res.status(404).json({ message: 'Segment Not Found' });
+        } else {
+            // Delete all tasks associated with the segment
+            await Task.deleteMany({ segment_id: id });
+        }
+
+        res.status(200).json({ message: 'Segment Deleted' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+
+const updateSegment = async (req,res)=>{
     try {
         const {id} = req.params
-        const segment = await Segment.findByIdAndDelete(id)
+        const segment = await Segment.findByIdAndUpdate(id, req.body)
 
         if(!segment){
             return res.status(404).json({message: 'Segment Not Found'})
         }
-        res.status(200).json({message:'Segment Deleted'})
+
+        const updatedSegment = await Segment.findById(id)
+        res.status(200).json(updatedSegment)
     } catch (error) {
         res.status(500).json({message:error.message})
     }
 }
 
+
 module.exports = {
     getSegments,
     addSegment,
     deleteAllSegments,
-    deleteSegment
+    deleteSegment,
+    updateSegment
 }

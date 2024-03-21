@@ -50,9 +50,60 @@ const deleteAllTasks = async (req, res) => {
     }
 };
 
+const changeStatusTask = async (req, res) => {
+    const { id } = req.params;
+    const { status } = req.body;
+    try {
+        const updatedTask = await Task.findByIdAndUpdate(id, { status }, { new: true });
+        if (!updatedTask) {
+            return res.status(404).json({ message: 'Task not found' });
+        }
+        res.status(200).json(updatedTask);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+const changeTask = async (req, res) => {
+    const { id } = req.params;
+    const { task_name, description } = req.body;
+    try {
+        const updatedTask = await Task.findByIdAndUpdate(
+            id,
+            { task_name, description },
+            { new: true }
+        );
+        if (!updatedTask) {
+            return res.status(404).json({ message: 'Task not found' });
+        }
+        res.status(200).json(updatedTask);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+
+
+const deleteTaskById = async (req,res) => {
+    const {id} = req.params
+    try {
+        const updatedTask = await Task.findByIdAndDelete(id);
+        if (!updatedTask) {
+            return res.status(404).json({ message: 'Task not found' });
+        }
+        res.status(200).json({message:'Task Deleted'})
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+
 module.exports = {
     getTasks,
     addTask,
     deleteAllTasks,
-    getTasksByRoom
+    getTasksByRoom,
+    changeStatusTask,
+    deleteTaskById,
+    changeTask
 }
