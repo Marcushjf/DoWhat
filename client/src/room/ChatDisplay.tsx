@@ -1,7 +1,7 @@
 import { Fragment } from "react/jsx-runtime";
 
 interface ChatDisplayProps {
-  messages: { message: string; room: string; user: string; time: string }[];
+  messages: any[];
   user: string
 }
 
@@ -9,14 +9,15 @@ function ChatDisplay({messages, user}: ChatDisplayProps) {
 
   function renderMessages() {
     return messages.map((item, i) => {
-        const text_col = (item.user === user)? 'primary' : 'dark'
+        const createdAt = new Date(item.createdAt);
+        const text_col = (item.username === user)? 'primary' : 'dark'
       return (
         <div
           key={i}
           className={`row ps-1 pe-1 m-0 justify-content-between text-start text-${text_col}`}
           style={{ width: "100%" }}
         >
-          <p className="col-5">{`${item.time}\u00a0\u00a0${item.user.slice(
+          <p className="col-5">{`${createdAt.getHours()}:${createdAt.getMinutes()}\u00a0\u00a0${item.username.slice(
             0,
             7
           )} : `}</p>

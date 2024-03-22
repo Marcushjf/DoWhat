@@ -12,6 +12,7 @@ const userRoute = require('./routes/userRoute.js')
 const occupantRoute = require('./routes/occupantRoute.js')
 const segmentRoute = require('./routes/segmentRoute.js')
 const taskRoute = require('./routes/taskRoute.js')
+const chatRoute = require('./routes/chatRoute.js')
 
 const app = express();
 const server = http.createServer(app);  // Create an HTTP server
@@ -24,6 +25,7 @@ const io = socketIo(server, {
 const PORT = 3001;
 
 io.on('connection', (socket) => {
+    io.to(socket.id).emit('login')
     console.log('A user connected:', socket.id);
 
     socket.on('req_rooms',()=>{
@@ -52,6 +54,7 @@ io.on('connection', (socket) => {
     socket.on('req_segments', ()=>{
         io.to(socket.id).emit('res_segments')
         io.to(socket.id).emit('res_tasks')
+        io.to(socket.id).emit('res_chats')
     })
 
     socket.on('add_task', (data)=>{
@@ -60,6 +63,10 @@ io.on('connection', (socket) => {
 
     socket.on('add_segment', (data)=>{
         io.to(data.room_name).emit('res_segments')
+    })
+
+    socket.on('add_chat',(data)=>{
+        io.to(data.room_name).emit('res_chats')
     })
 
     socket.on('disconnect', () => {
@@ -78,6 +85,7 @@ app.use("/api/user", userRoute)
 app.use("/api/occupant", occupantRoute)
 app.use("/api/segment", segmentRoute)
 app.use("/api/task", taskRoute)
+app.use("/api/chat", chatRoute)
 
 
 app.get('/', (req, res) => {

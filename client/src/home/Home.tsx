@@ -4,6 +4,7 @@ import RoomCard from "./RoomCard";
 import Notification from "./Notification";
 import CreateRoomModal from "./CreateModal";
 import JoinRoomModal from "./JoinModal";
+import { useNavigate } from "react-router-dom";
 
 interface HomeProps {
   userid: string;
@@ -24,6 +25,13 @@ function Home({ userid, socket, join }: HomeProps) {
   const [showModal, setShowModal] = useState(false);
   const [showJoinModal, setShowJoinModal] = useState(false);
   const [showNotif, setShowNotif] = useState(false);
+  const navigate = useNavigate()
+
+  useEffect(()=>{
+    if(!userid){
+      navigate('/')
+    }
+  },[userid])
 
   const handleJoinRoom = () => {
     // Handle joining room logic

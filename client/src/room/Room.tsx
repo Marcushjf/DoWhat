@@ -3,7 +3,6 @@ import ChatBox from "./ChatBox";
 import ChatDisplay from "./ChatDisplay";
 import { Socket } from "socket.io-client";
 import { useEffect, useState } from "react";
-import Game from "./Game";
 import { useNavigate } from "react-router-dom";
 import TODO from "./TODO";
 
@@ -14,12 +13,18 @@ interface RoomProps {
 }
 
 function Room({ socket, user, room }: RoomProps) {
-  const [messages, setMessages] = useState([])
+  const [messages, setMessages] = useState<any[]>([])
   const [segments, setSegments] = useState<any[]>([])
   const [tasks, setTasks] = useState<any[]>([])
   const [error, setError] = useState([])
 
   const navigate = useNavigate()
+
+  useEffect(()=>{
+    if(!user){
+      navigate('/')
+    }
+  },[user])
 
   useEffect(()=>{
     socket.emit("req_segments");
@@ -53,10 +58,48 @@ function Room({ socket, user, room }: RoomProps) {
           setError(error.message);
         });
     });
+    socket.off("res_chats").on("res_chats", () => {
+      fetch(`http://localhost:3001/api/chat/${room}`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Error loading Rooms");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          setMessages(data);
+          console.log(data)
+        })
+        .catch((error) => {
+          setError(error.message);
+        });
+    });
   },[socket])
 
   function handleSend(message: string) {
-    
+    fetch(`http://localhost:3001/api/chat/${room}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        message: message,
+        username: user,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Error sending chat.");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        socket.emit("add_chat", { room_name: room });
+      })
+      .catch((error) => {
+        // Handle error
+        setError(error.message);
+      });
   }
 
   

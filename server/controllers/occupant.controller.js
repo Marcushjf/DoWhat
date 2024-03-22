@@ -1,3 +1,6 @@
+const { Chat } = require('../models/Chat');
+const {Task} = require('../models/Task')
+const {Segment} = require('../models/Segment')
 const {Occupant} = require('../models/Occupant')
 const{Room} = require('../models/Room');
 const { route } = require('../routes/roomRoutes');
@@ -58,6 +61,12 @@ const leaveRoom = async (req, res) => {
         // If the updated room has size 0, delete the room
         if (updatedRoom.size === 0) {
             await Room.deleteOne({ room_name: room });
+            // Delete tasks associated with the room
+            await Task.deleteMany({ room_name: room });
+            // Delete segments associated with the room
+            await Segment.deleteMany({ room_name: room });
+            // Delete chats associated with the room
+            await Chat.deleteMany({ room_name: room });
             return res.status(200).json({ message: 'User left the room successfully and Room deleted.' });
         }
 
