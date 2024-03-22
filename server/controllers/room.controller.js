@@ -130,6 +130,25 @@ const joinRoom = async (req, res) => {
     }
 };
 
+const getUsers = async (req, res) => {
+    let { room_name } = req.params;
+    try {
+        //check if room exists
+        const room = await Room.findOne({ room_name });
+        if (!room) {
+            return res.status(404).json({ message: 'Room not found.' });
+        }
+
+        // Find users based on usernames in the room.users array
+        const users = await User.find({ name: { $in: room.users } });
+
+        return res.status(200).json(users);
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+};
+
+
 
 
 module.exports = {
@@ -139,5 +158,6 @@ module.exports = {
     updateRoom,
     deleteRoom,
     deleteAllRooms,
-    joinRoom
+    joinRoom,
+    getUsers
 }

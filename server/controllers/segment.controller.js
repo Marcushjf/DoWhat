@@ -2,7 +2,7 @@ const {Segment} = require('../models/Segment')
 
 // Get segments from room
 const getSegments = async (req, res) => {
-    const { room_name } = req.params;
+    let { room_name } = req.params;
     try {
         const segments = await Segment.find({ room_name: room_name });
         res.status(200).json(segments);

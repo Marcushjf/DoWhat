@@ -55,6 +55,7 @@ io.on('connection', (socket) => {
         io.to(socket.id).emit('res_segments')
         io.to(socket.id).emit('res_tasks')
         io.to(socket.id).emit('res_chats')
+        io.to(socket.id).emit('res_users')
     })
 
     socket.on('add_task', (data)=>{
@@ -69,6 +70,10 @@ io.on('connection', (socket) => {
         io.to(data.room_name).emit('res_chats')
     })
 
+    socket.on('add_user',(data)=>{
+        io.to(data.room_name).emit('res_users')
+    })
+
     socket.on('disconnect', () => {
         console.log("Unknown user disconnected", socket.id);
     });
@@ -78,6 +83,7 @@ io.on('connection', (socket) => {
 //middleware
 app.use(cors())
 app.use(express.json())
+app.use(express.urlencoded({ extended: false }));
 
 //api to access db
 app.use("/api/room", roomRoute)

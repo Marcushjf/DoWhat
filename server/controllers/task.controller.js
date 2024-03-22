@@ -2,7 +2,7 @@ const {Task} = require('../models/Task')
 
 // Get Tasks from Room
 const getTasksByRoom = async (req, res) => {
-    const { room_name } = req.params;
+    let { room_name } = req.params;
     try {
         const Tasks = await Task.find({ room_name: room_name });
         res.status(200).json(Tasks);

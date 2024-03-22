@@ -16,23 +16,24 @@ function Room({ socket, user, room }: RoomProps) {
   const [messages, setMessages] = useState<any[]>([])
   const [segments, setSegments] = useState<any[]>([])
   const [tasks, setTasks] = useState<any[]>([])
+  const [users, setUsers] = useState<any[]>([])
   const [error, setError] = useState([])
 
   const navigate = useNavigate()
 
-  useEffect(()=>{
-    if(!user){
+  useEffect(() => {
+    if (!user) {
       navigate('/')
     }
-  },[user])
+  }, [user])
 
-  useEffect(()=>{
+  useEffect(() => {
     socket.emit("req_segments");
     socket.off("res_segments").on("res_segments", () => {
       fetch(`http://localhost:3001/api/segment/${room}`)
         .then((response) => {
           if (!response.ok) {
-            throw new Error("Error loading Rooms");
+            throw new Error("Error loading Segments");
           }
           return response.json();
         })
@@ -47,7 +48,7 @@ function Room({ socket, user, room }: RoomProps) {
       fetch(`http://localhost:3001/api/task/get/${room}`)
         .then((response) => {
           if (!response.ok) {
-            throw new Error("Error loading Rooms");
+            throw new Error("Error loading Tasks");
           }
           return response.json();
         })
@@ -62,19 +63,34 @@ function Room({ socket, user, room }: RoomProps) {
       fetch(`http://localhost:3001/api/chat/${room}`)
         .then((response) => {
           if (!response.ok) {
-            throw new Error("Error loading Rooms");
+            throw new Error("Error loading Chats");
           }
           return response.json();
         })
         .then((data) => {
           setMessages(data);
+        })
+        .catch((error) => {
+          setError(error.message);
+        });
+    });
+    socket.off("res_users").on("res_users", () => {
+      fetch(`http://localhost:3001/api/room/users/${room}`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Error loading Users");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          setUsers(data);
           console.log(data)
         })
         .catch((error) => {
           setError(error.message);
         });
     });
-  },[socket])
+  }, [socket])
 
   function handleSend(message: string) {
     fetch(`http://localhost:3001/api/chat/${room}`, {
@@ -102,23 +118,36 @@ function Room({ socket, user, room }: RoomProps) {
       });
   }
 
-  
+
 
   return (
     <Fragment>
-      <div>{`${room}`}</div>
-      <div className="row d-flex flex-row justify-content-center p-3">
-        <div className="col-9" style={{height:'85vh'}}>
-          <TODO segments={segments} socket={socket} tasks={tasks} room={room}/>
+      <div className="d-flex justify-content-center">{`${room}`}</div>
+      <div className="row d-flex flex-row justify-content-center p-3 m-0">
+        <div className="" style={{ height: '85vh', width:'1200px' }}>
+          <TODO segments={segments} socket={socket} tasks={tasks} room={room} />
         </div>
         <div
-          className="p-3 col-3 d-flex flex-column justify-content-center align-items-center"
-          style={{ height: "100vh" }}
+          className="p-0 col-3 d-flex flex-column align-items-center "
+          style={{ height: "85vh" }}
         >
-          <div className="h-50 mb-3 w-100">
-            <ChatDisplay messages={messages} user={user}/>
+          <div className="overflow-hidden text-start w-100 mb-5" style={{ height: '25%' }}>
+            <ul className="list-group overflow-auto" style={{ border: 'none', height: '100%' }}>
+              <div className="card-header text-center">
+                Users
+              </div>
+              {users.map((user, index) => (
+                <li key={index} className="list-group-item">{user.name}</li>
+              ))}
+            </ul>
           </div>
-          <div>
+
+
+
+          <div className="hmb-3 w-100 ms-0" style={{ height: '65%' }}>
+            <ChatDisplay messages={messages} user={user} />
+          </div>
+          <div className="w-100">
             <ChatBox onSend={handleSend} />
           </div>
         </div>

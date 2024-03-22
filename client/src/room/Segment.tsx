@@ -1,8 +1,9 @@
 import { useState } from "react";
 import TaskCard from "./TaskCard";
 import { Socket } from "socket.io-client";
-import { EditModal} from "./SegmentModals";
+import { EditModal } from "./SegmentModals";
 import { ConfirmationModal } from "../modals/Confirmation";
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 interface SegmentProps {
   segment: any;
@@ -11,8 +12,8 @@ interface SegmentProps {
 }
 
 function Segment({ segment, tasks, socket }: SegmentProps) {
-    const [showEditModal, setShowEditModal] = useState(false);
-    const [showRemoveModal, setShowRemoveModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showRemoveModal, setShowRemoveModal] = useState(false);
   const [showInput, setShowInput] = useState(false);
   const [newTaskName, setNewTaskName] = useState("");
   const [error, setError] = useState("");
@@ -21,7 +22,7 @@ function Segment({ segment, tasks, socket }: SegmentProps) {
     setShowEditModal(true);
   };
 
-  const handleEditSegment = (segment_name:string, deadline:string) => {
+  const handleEditSegment = (segment_name: string, deadline: string) => {
     fetch(`http://localhost:3001/api/segment/${segment._id}`, {
       method: "PUT",
       headers: {
@@ -101,24 +102,24 @@ function Segment({ segment, tasks, socket }: SegmentProps) {
   const handleConfirmRemove = () => {
     // Handle confirming remove segment
     fetch(`http://localhost:3001/api/segment/${segment._id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        return response.json();
       })
-        .then((response) => {
-          return response.json();
-        })
-        .then((data) => {
-          // Handle successful login
-          console.log(data)
-          socket.emit('add_segment', { room_name: segment.room_name });
-        })
-        .catch((error) => {
-          // Handle login error
-          console.log(error);
-        });
-      setShowRemoveModal(false);
+      .then((data) => {
+        // Handle successful login
+        console.log(data)
+        socket.emit('add_segment', { room_name: segment.room_name });
+      })
+      .catch((error) => {
+        // Handle login error
+        console.log(error);
+      });
+    setShowRemoveModal(false);
   };
 
 
@@ -154,36 +155,20 @@ function Segment({ segment, tasks, socket }: SegmentProps) {
       <h5>{`By: ${segment.deadline}`}</h5>
       <div className="task-list">
         {tasks.map((task, index) => (
-          <TaskCard key={index} task={task} socket={socket}/>
+          <TaskCard key={index} task={task} socket={socket} />
         ))}
       </div>
 
       <div>
         {showInput ? (
-          <div className="input-group mb-3">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Enter task name"
-              value={newTaskName}
-              onChange={handleInputChange}
-            />
-            <button
-              className="btn btn-success"
-              type="button"
-              onClick={handleSubmit}
-            >
-              Add
-            </button>
-            <button
-              className="btn btn-danger"
-              type="button"
-              onClick={handleCancel}
-            >
-              <i className="bi bi-x-lg"></i>
-            </button>
+          <div className="hstack gap-3">
+            <input className="form-control me-auto" type="text" placeholder="Task name" aria-label="Task name" value={newTaskName} onChange={handleInputChange}/>
+            <button type="button" className="btn btn-secondary" onClick={handleSubmit}>Add</button>
+            <div className="vr"></div>
+            <button type="button" className="btn btn-outline-danger" onClick={handleCancel}><i className="bi bi-x-lg"></i></button>
             {error && <div className="alert alert-danger">{error}</div>}
           </div>
+          
         ) : (
           <button
             className="btn btn-primary w-100 "
@@ -196,19 +181,19 @@ function Segment({ segment, tasks, socket }: SegmentProps) {
       </div>
 
       <div>
-      {/* Segment content */}
-      <EditModal
-        show={showEditModal}
-        onCancel={() => setShowEditModal(false)}
-        onEditSegment={handleEditSegment}
-      />
-      <ConfirmationModal
-        show={showRemoveModal}
-        onCancel={() => setShowRemoveModal(false)}
-        onConfirmRemove={handleConfirmRemove}
-        message="remove segment"
-      />
-    </div>
+        {/* Segment content */}
+        <EditModal
+          show={showEditModal}
+          onCancel={() => setShowEditModal(false)}
+          onEditSegment={handleEditSegment}
+        />
+        <ConfirmationModal
+          show={showRemoveModal}
+          onCancel={() => setShowRemoveModal(false)}
+          onConfirmRemove={handleConfirmRemove}
+          message="remove segment"
+        />
+      </div>
     </div>
   );
 }

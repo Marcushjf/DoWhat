@@ -15,7 +15,7 @@ const getChats = async (req, res) => {
 };
 
 const getRoomChats = async (req, res) => {
-    const {room_name} = req.params
+    let {room_name} = req.params
     try {
         
         const chats = await Chat.find({room_name:room_name});
@@ -45,7 +45,7 @@ const deleteAllChats = async (req, res) => {
 };
 
 const deleteRoomChat = async (req,res) => {
-    const {room_name} = req.params;
+    let {room_name} = req.params;
     try{
         const room = await Room.findOne({ room_name });
         if (!room) {
