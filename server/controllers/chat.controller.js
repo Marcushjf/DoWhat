@@ -15,19 +15,30 @@ const getChats = async (req, res) => {
 };
 
 const getRoomChats = async (req, res) => {
-    let {room_name} = req.params
+    let { room_name } = req.params;
     try {
-        
-        const chats = await Chat.find({room_name:room_name});
-        if (chats) {
-            return res.status(200).json(chats);
-        } else {
-            res.status(404).json({ message: 'No chats available.' });
+        let chats = await Chat.find({ room_name: room_name }).sort({ createdAt: -1 });
+
+        if (chats.length > 100) {
+            // Delete chats beyond the first 100
+            const chatsToDelete = chats.slice(100);
+            await Chat.deleteMany({ _id: { $in: chatsToDelete.map(chat => chat._id) } });
+
+            // Keep only the most recent 100 chats
+            chats = chats.slice(0, 100);
         }
+
+        // Reverse the array to maintain the original order
+        chats.reverse();
+
+        return res.status(200).json(chats);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
+
+
+
 
 const deleteAllChats = async (req, res) => {
     try {

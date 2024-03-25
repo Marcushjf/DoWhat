@@ -14,6 +14,16 @@ function ChatBox(prop : ChatBoxProps) {
     setMessage("");
   }
 
+  function handleKeyPress(event: React.KeyboardEvent<HTMLInputElement>) {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      if (message.trim() !== "") {
+        prop.onSend(message);
+        setMessage("");
+      }
+    }
+  }
+
   return (
     <div className="input-group mb-3">
       <span className="input-group-text" id="basic-addon1">
@@ -28,6 +38,7 @@ function ChatBox(prop : ChatBoxProps) {
         id="message_input"
         value={message}
         onChange={(e) => setMessage(e.target.value)}
+        onKeyPress={(e) => handleKeyPress(e)}
       />
       <button style={{width:'20%'}} onClick={(event) => handleSend(event)} disabled={message.trim() === ""}>Send</button>
     </div>
