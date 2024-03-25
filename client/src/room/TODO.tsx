@@ -68,7 +68,7 @@ const TODO = ({ segments, tasks, socket, room }: TODOProps) => {
         ))}
         <div style={{ width: "365px" }}>
           <button
-            className="btn btn-primary ps-2 pe-2 w-100"
+            className="btn btn-secondary ps-2 pe-2 w-100"
             onClick={addSegment}
           >
             <i className="bi bi-plus-lg"></i>Add a Goal/Objective
@@ -113,14 +113,14 @@ const TODO = ({ segments, tasks, socket, room }: TODOProps) => {
               <div className="modal-footer">
                 <button
                   type="button"
-                  className="btn btn-primary"
+                  className="btn btn-secondary"
                   onClick={handleAddSegment}
                 >
                   Add
                 </button>
                 <button
                   type="button"
-                  className="btn btn-secondary"
+                  className="btn btn-danger"
                   onClick={handleCancel}
                 >
                   Cancel

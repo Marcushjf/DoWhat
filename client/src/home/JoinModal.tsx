@@ -63,11 +63,11 @@ const JoinRoomModal: React.FC<JoinRoomModalProps> = ({
             </div>
           </div>
           <div className="modal-footer">
+          <button type="button" className="btn btn-primary" onClick={handleSubmit}>
+              Join
+            </button>
             <button type="button" className="btn btn-secondary" onClick={onClose}>
               Cancel
-            </button>
-            <button type="button" className="btn btn-primary" onClick={handleSubmit}>
-              Join
             </button>
           </div>
         </div>

@@ -53,14 +53,20 @@ function Login({ login }: LoginProps) {
   }
 
   return (
-    <div className="container">
+    <div className="container ">
       <div className="row justify-content-center mt-5">
         <div className="col-md-6">
           <div className="card">
-            <div className="card-header">Login</div>
+            <div
+              className="card-header d-flex align-items-center justify-content-center"
+              style={{ height: "100px" }}
+            >
+              Login
+            </div>
+
             <div className="card-body">
               <form onSubmit={handleLogin}>
-                <div className="mb-3">
+                <div className="mb-3 d-flex flex-column text-center align-items-center">
                   <label htmlFor="username" className="form-label">
                     Username <span className="text-danger">*</span>
                   </label>
@@ -74,7 +80,7 @@ function Login({ login }: LoginProps) {
                     required
                   />
                 </div>
-                <div className="mb-3">
+                <div className="mb-5 d-flex flex-column text-center align-items-center">
                   <label htmlFor="password" className="form-label">
                     Password <span className="text-danger">*</span>
                   </label>
@@ -89,8 +95,8 @@ function Login({ login }: LoginProps) {
                   />
                 </div>
                 {error && <div className="alert alert-danger">{error}</div>}
-                <div className="d-grid mb-3">
-                  <button type="submit" className="btn btn-primary">
+                <div className="d-grid mb-3 d-flex flex-column align-items-center">
+                  <button type="submit" className="btn btn-primary" style={{width:'375px'}}>
                     {loading ? (
                       <div
                         className="spinner-border spinner-border-sm"
@@ -112,6 +118,7 @@ function Login({ login }: LoginProps) {
             </div>
           </div>
         </div>
+        {/* <div className="col-md-6 d-none d-md-block">hi</div> */}
       </div>
     </div>
   );

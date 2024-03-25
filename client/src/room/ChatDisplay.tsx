@@ -9,17 +9,14 @@ function ChatDisplay({ messages, user }: ChatDisplayProps) {
   function renderMessages() {
     return messages.slice().reverse().map((item, i) => { // Reverse the array of messages
       const createdAt = new Date(item.createdAt);
-      const text_col = item.username === user ? "primary" : "dark";
+      const text_col = item.username === user ? "primary" : "light";
       return (
         <div
           key={i}
           className={`row ps-1 pe-1 m-0 justify-content-between text-start text-${text_col}`}
           style={{ width: "100%" }}
         >
-          <p className="col-5">{`${createdAt.getHours()}:${createdAt.getMinutes()}\u00a0\u00a0${item.username.slice(
-            0,
-            7
-          )} : `}</p>
+          <p className="col-5">{`${createdAt.getHours().toString().padStart(2, '0')}:${createdAt.getMinutes().toString().padStart(2, '0')}\u00a0\u00a0${item.username.slice(0, 6)} : `}</p>
           <p
             className="col-7"
             style={{ wordWrap: "break-word", whiteSpace: "pre-wrap" }}

@@ -171,7 +171,7 @@ function Segment({ segment, tasks, socket }: SegmentProps) {
           
         ) : (
           <button
-            className="btn btn-primary w-100 "
+            className="btn btn-secondary w-100 "
             type="button"
             onClick={handleAddTask}
           >

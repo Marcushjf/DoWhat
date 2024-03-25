@@ -80,11 +80,11 @@ const CreateRoomModal: React.FC<CreateRoomModalProps> = ({
             </div>
           </div>
           <div className="modal-footer">
+          <button type="button" className="btn btn-primary" onClick={handleSubmit}>
+              Create
+            </button>
             <button type="button" className="btn btn-secondary" onClick={onClose}>
               Cancel
-            </button>
-            <button type="button" className="btn btn-primary" onClick={handleSubmit}>
-              Create
             </button>
           </div>
         </div>

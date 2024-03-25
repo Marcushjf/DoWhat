@@ -1,13 +1,21 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>DoWhat</title>
+    <style>
+      #root {
+        height: 100vh; /* Take up 100% of the viewport height */
+        width: 100vw; /* Take up 100% of the viewport width */
+        overflow: hidden; /* Hide overflow */
+      }
+    </style>
   </head>
   <body>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="./custom.css" rel="stylesheet">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

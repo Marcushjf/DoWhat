@@ -102,7 +102,7 @@ function Register() {
                   />
                 </div>
                 {error && <div className="alert alert-danger">{error}</div>}
-                <div className="d-grid mb-3">
+                <div className="d-grid mb-3 mt-5">
                   <button type="submit" className="btn btn-primary">
                     {loading ? (
                       <div

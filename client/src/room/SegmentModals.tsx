@@ -49,8 +49,8 @@ interface EditModalProps {
               </div>
             </div>
             <div className="modal-footer">
-              <button type="button" className="btn btn-primary" onClick={handleEdit}>Save</button>
-              <button type="button" className="btn btn-secondary" onClick={onCancel}>Cancel</button>
+              <button type="button" className="btn btn-secondary" onClick={handleEdit}>Save</button>
+              <button type="button" className="btn btn-danger" onClick={onCancel}>Cancel</button>
             </div>
           </div>
         </div>
