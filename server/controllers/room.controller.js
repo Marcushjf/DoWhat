@@ -48,6 +48,7 @@ const addRoom = async (req,res)=>{
         await Occupant.create({user:userid, room:room_name})
         
         const room = await Room.create({ room_name, password:password, size:1, users:[userid]})
+        console.log(`${room_name} is created by ${userid}`)
         res.status(200).json(room)
     } catch (error) {
         res.status(500).json({message:error.message})
@@ -123,7 +124,8 @@ const joinRoom = async (req, res) => {
             { $push: { users: userid }, $inc: { size: 1 } },
             { new: true }
         );
-
+        
+        console.log(`${userid} joined ${room_name}`)
         res.status(200).json(updatedRoom);
     } catch (error) {
         res.status(500).json({ message: error.message });

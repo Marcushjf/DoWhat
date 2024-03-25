@@ -69,7 +69,8 @@ const leaveRoom = async (req, res) => {
             await Chat.deleteMany({ room_name: room });
             return res.status(200).json({ message: 'User left the room successfully and Room deleted.' });
         }
-
+        
+        console.log(`${user} left ${room}`)
         res.status(200).json({ message: 'User left the room successfully.' });
     } catch (error) {
         res.status(500).json({ message: error.message });

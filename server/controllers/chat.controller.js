@@ -78,6 +78,7 @@ const sendChat = async (req, res) => {
 
         const result = await Chat.create({ room_name, message, username });
         if (result) {
+            console.log(`${username} sent "${message}" in ${room_name}`)
             res.status(200).json(result);
         } else {
             res.status(500).json({ message: `Unable to create chat message.` });
