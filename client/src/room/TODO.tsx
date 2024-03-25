@@ -22,7 +22,7 @@ const TODO = ({ segments, tasks, socket, room }: TODOProps) => {
 
   // Function to handle submission of the new segment
   const handleAddSegment = () => {
-    fetch('http://localhost:3001/api/segment/', {
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/segment/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

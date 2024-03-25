@@ -24,7 +24,7 @@ function RoomCard({ room, socket, userid, join }: RoomCardProps) {
     }
   
     function confirmLeave() {
-      fetch("http://localhost:3001/api/occupant/leave", {
+      fetch(`${import.meta.env.VITE_BACKEND_URL}/api/occupant/leave`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

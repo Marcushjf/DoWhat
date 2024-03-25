@@ -21,7 +21,7 @@ function Login({login}:LoginProps) {
         }
     
         // Make API call to authenticate user
-        fetch('http://localhost:3001/api/user/login', {
+        fetch(`${import.meta.env.VITE_BACKEND_URL}/api/user/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

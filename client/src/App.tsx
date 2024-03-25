@@ -7,7 +7,7 @@ import Login from './login/Login';
 import Register from './login/Register';
 
 
-const socket = io('http://localhost:3001')
+const socket = io(`${import.meta.env.VITE_BACKEND_URL}`)
 
 const App: React.FC = () => {
 

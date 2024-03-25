@@ -51,7 +51,7 @@ function Home({ userid, socket, join }: HomeProps) {
   };
 
   const handleJoinModal = (roomName: string, password: string) => {
-    fetch("http://localhost:3001/api/room/join", {
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/room/join`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -90,7 +90,7 @@ function Home({ userid, socket, join }: HomeProps) {
 
   const handleSubmitModal = (roomName: string, password: string) => {
     // Handle creating room logic
-    fetch("http://localhost:3001/api/room/create", {
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/room/create`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -124,7 +124,7 @@ function Home({ userid, socket, join }: HomeProps) {
   useEffect(() => {
     socket.emit("req_rooms");
     socket.off("res_rooms").on("res_rooms", () => {
-      fetch(`http://localhost:3001/api/occupant/${userid}`)
+      fetch(`${import.meta.env.VITE_BACKEND_URL}/api/occupant/${userid}`)
         .then((response) => {
           if (!response.ok) {
             throw new Error("Error loading Rooms");
@@ -140,7 +140,7 @@ function Home({ userid, socket, join }: HomeProps) {
         });
     });
     socket.off("init").on("init", () => {
-      fetch(`http://localhost:3001/api/occupant/${userid}`)
+      fetch(`${import.meta.env.VITE_BACKEND_URL}/api/occupant/${userid}`)
         .then((response) => {
           if (!response.ok) {
             throw new Error("Error loading Rooms");

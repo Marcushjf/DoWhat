@@ -23,7 +23,7 @@ function Segment({ segment, tasks, socket }: SegmentProps) {
   };
 
   const handleEditSegment = (segment_name: string, deadline: string) => {
-    fetch(`http://localhost:3001/api/segment/${segment._id}`, {
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/segment/${segment._id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -65,7 +65,7 @@ function Segment({ segment, tasks, socket }: SegmentProps) {
   const handleSubmit = () => {
     // Submit the new task name
     // Reset state
-    fetch("http://localhost:3001/api/task/", {
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/task/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -101,7 +101,7 @@ function Segment({ segment, tasks, socket }: SegmentProps) {
 
   const handleConfirmRemove = () => {
     // Handle confirming remove segment
-    fetch(`http://localhost:3001/api/segment/${segment._id}`, {
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/segment/${segment._id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

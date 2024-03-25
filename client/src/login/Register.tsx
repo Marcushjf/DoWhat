@@ -26,7 +26,7 @@ function Register() {
         }
 
         // Make API call to authenticate user
-        fetch('http://localhost:3001/api/user/register', {
+        fetch(`${import.meta.env.VITE_BACKEND_URL}/api/user/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

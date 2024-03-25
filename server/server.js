@@ -19,7 +19,7 @@ const app = express();
 const server = http.createServer(app);  // Create an HTTP server
 const io = socketIo(server, {
     cors: {
-        origin: [`http://localhost:5173`]
+        origin: '*'
     }
 });  // Attach Socket.IO to the server
 

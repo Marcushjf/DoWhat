@@ -30,7 +30,7 @@ function Room({ socket, user, room }: RoomProps) {
   useEffect(() => {
     socket.emit("req_segments");
     socket.off("res_segments").on("res_segments", () => {
-      fetch(`http://localhost:3001/api/segment/${room}`)
+      fetch(`${import.meta.env.VITE_BACKEND_URL}/api/segment/${room}`)
         .then((response) => {
           if (!response.ok) {
             throw new Error("Error loading Segments");
@@ -45,7 +45,7 @@ function Room({ socket, user, room }: RoomProps) {
         });
     });
     socket.off("res_tasks").on("res_tasks", () => {
-      fetch(`http://localhost:3001/api/task/get/${room}`)
+      fetch(`${import.meta.env.VITE_BACKEND_URL}/api/task/get/${room}`)
         .then((response) => {
           if (!response.ok) {
             throw new Error("Error loading Tasks");
@@ -60,7 +60,7 @@ function Room({ socket, user, room }: RoomProps) {
         });
     });
     socket.off("res_chats").on("res_chats", () => {
-      fetch(`http://localhost:3001/api/chat/${room}`)
+      fetch(`${import.meta.env.VITE_BACKEND_URL}/api/chat/${room}`)
         .then((response) => {
           if (!response.ok) {
             throw new Error("Error loading Chats");
@@ -75,7 +75,7 @@ function Room({ socket, user, room }: RoomProps) {
         });
     });
     socket.off("res_users").on("res_users", () => {
-      fetch(`http://localhost:3001/api/room/users/${room}`)
+      fetch(`${import.meta.env.VITE_BACKEND_URL}/api/room/users/${room}`)
         .then((response) => {
           if (!response.ok) {
             throw new Error("Error loading Users");
@@ -93,7 +93,7 @@ function Room({ socket, user, room }: RoomProps) {
   }, [socket])
 
   function handleSend(message: string) {
-    fetch(`http://localhost:3001/api/chat/${room}`, {
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/chat/${room}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

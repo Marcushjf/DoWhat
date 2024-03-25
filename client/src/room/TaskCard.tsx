@@ -14,7 +14,7 @@ function TaskCard({ task, socket }: TaskCardProps) {
 
 
   const handleEdit = (task_name:string, description:string) => {
-    fetch(`http://localhost:3001/api/task/${task._id}`, {
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/task/${task._id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -40,7 +40,7 @@ function TaskCard({ task, socket }: TaskCardProps) {
   };
 
   const handleRemove = () => {
-    fetch(`http://localhost:3001/api/task/${task._id}`, {
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/task/${task._id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -68,7 +68,7 @@ function TaskCard({ task, socket }: TaskCardProps) {
   }
 
   const handleStatus = (status:string) => {
-    fetch(`http://localhost:3001/api/task/status/${task._id}`, {
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/task/status/${task._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
