@@ -6,6 +6,7 @@ const socketIo = require('socket.io');
 const cors = require('cors');
 const {addPlayer, removePlayer} = require('./models/Room')
 const {Room }= require('./models/Room')
+require('dotenv').config()
 
 const roomRoute = require('./routes/roomRoutes.js')
 const userRoute = require('./routes/userRoute.js')
@@ -22,7 +23,9 @@ const io = socketIo(server, {
     }
 });  // Attach Socket.IO to the server
 
-const PORT = 3001;
+//env variables
+const PORT = process.env.PORT;
+const MONGO = process.env.MONGO;
 
 io.on('connection', (socket) => {
     io.to(socket.id).emit('login')
@@ -98,7 +101,7 @@ app.get('/', (req, res) => {
     res.send('Working');
 });
 
-mongoose.connect("mongodb+srv://marcushjf:Mzemrej9rOfKoDgx@backenddb.hh4ttxn.mongodb.net/?retryWrites=true&w=majority&appName=BackendDB")
+mongoose.connect(MONGO)
     .then(()=>{
         console.log("Connected to database")
         server.listen(PORT, () => {

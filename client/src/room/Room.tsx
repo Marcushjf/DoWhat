@@ -124,7 +124,7 @@ function Room({ socket, user, room }: RoomProps) {
     <Fragment>
       <div className="d-flex justify-content-center">{`${room}`}</div>
       <div className="row d-flex flex-row justify-content-center p-3 m-0">
-        <div className="" style={{ height: '85vh', width:'1200px' }}>
+        <div className="" style={{ height: '85vh', width:'70vw' }}>
           <TODO segments={segments} socket={socket} tasks={tasks} room={room} />
         </div>
         <div
