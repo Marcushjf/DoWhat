@@ -55,7 +55,7 @@ const TODO = ({ segments, tasks, socket, room }: TODOProps) => {
   };
 
   return (
-    <div className="container border h-100 pt-3 ps-0 pe-0">
+    <div className="container border rounded-3 h-100 pt-3 ps-0 pe-0">
       <div className="row flex-nowrap overflow-auto w-100 h-100 m-0">
         {segments.map((segment, index) => (
           <div key={index} className="" style={{ width: "380px" }}>

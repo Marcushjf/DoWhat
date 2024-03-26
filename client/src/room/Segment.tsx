@@ -124,7 +124,7 @@ function Segment({ segment, tasks, socket }: SegmentProps) {
 
 
   return (
-    <div className="border p-2 position-relative">
+    <div className="border p-2 position-relative rounded-3">
       <div className="dropdown position-absolute top-0 end-0 m-3">
         <button
           className="btn"
@@ -159,19 +159,19 @@ function Segment({ segment, tasks, socket }: SegmentProps) {
         ))}
       </div>
 
-      <div>
+      <div className="p-2">
         {showInput ? (
-          <div className="hstack gap-3">
-            <input className="form-control me-auto" type="text" placeholder="Task name" aria-label="Task name" value={newTaskName} onChange={handleInputChange}/>
-            <button type="button" className="btn btn-secondary" onClick={handleSubmit}>Add</button>
+          <div className="hstack gap-2">
+            <input className="form-control p-1 m-0 ps-2" type="text" placeholder="Task name" aria-label="Task name" value={newTaskName} onChange={handleInputChange}/>
+            <button type="button" className="btn btn-secondary p-1" style={{width:'50px'}} onClick={handleSubmit}>Add</button>
             <div className="vr"></div>
-            <button type="button" className="btn btn-outline-danger" onClick={handleCancel}><i className="bi bi-x-lg"></i></button>
+            <button type="button" className="btn btn-outline-danger p-1" style={{width:'50px'}} onClick={handleCancel}><i className="bi bi-x-lg"></i></button>
             {error && <div className="alert alert-danger">{error}</div>}
           </div>
           
         ) : (
           <button
-            className="btn btn-secondary w-100 "
+            className="btn btn-secondary w-100 p-2 rounded-pill"
             type="button"
             onClick={handleAddTask}
           >

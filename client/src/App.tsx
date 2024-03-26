@@ -24,7 +24,7 @@ const App: React.FC = () => {
 
   return(
     <BrowserRouter>
-      <div className='h-100 w-100'>
+      <div className='h-100 w-100' style={{overflow:'auto'}}>
         <Fragment>
           <Routes>
             <Route path='/' element={<Login login={login}/>}/>

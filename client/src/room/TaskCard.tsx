@@ -5,15 +5,14 @@ import { ConfirmationModal } from "../modals/Confirmation";
 
 interface TaskCardProps {
   task: any;
-  socket: Socket
+  socket: Socket;
 }
 
 function TaskCard({ task, socket }: TaskCardProps) {
-    const [showModal, setShowModal] = useState(false)
-    const [showRemoveModal, setShowRemoveModal] = useState(false)
+  const [showModal, setShowModal] = useState(false);
+  const [showRemoveModal, setShowRemoveModal] = useState(false);
 
-
-  const handleEdit = (task_name:string, description:string) => {
+  const handleEdit = (task_name: string, description: string) => {
     fetch(`${import.meta.env.VITE_BACKEND_URL}/api/task/${task._id}`, {
       method: "PUT",
       headers: {
@@ -41,61 +40,90 @@ function TaskCard({ task, socket }: TaskCardProps) {
 
   const handleRemove = () => {
     fetch(`${import.meta.env.VITE_BACKEND_URL}/api/task/${task._id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        return response.json();
       })
-        .then((response) => {
-          return response.json();
-        })
-        .then((data) => {
-          socket.emit('add_task', { room_name: task.room_name });
-        })
-        .catch((error) => {
-          // Handle login error
-          console.log(error);
-        });
-      setShowRemoveModal(false);
-  }
+      .then((data) => {
+        socket.emit("add_task", { room_name: task.room_name });
+      })
+      .catch((error) => {
+        // Handle login error
+        console.log(error);
+      });
+    setShowRemoveModal(false);
+  };
 
   const handleModalOpen = () => {
     setShowModal(true);
   };
 
-  const handleRemoveModalOpen = () =>{
-    setShowRemoveModal(true)
-  }
+  const handleRemoveModalOpen = () => {
+    setShowRemoveModal(true);
+  };
 
-  const handleStatus = (status:string) => {
+  const handleStatus = (status: string) => {
     fetch(`${import.meta.env.VITE_BACKEND_URL}/api/task/status/${task._id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            status: status
-          }),
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        status: status,
+      }),
+    })
+      .then((response) => {
+        return response.json();
       })
-        .then((response) => {
-          return response.json();
-        })
-        .then((data) => {
-          socket.emit('add_task', { room_name: task.room_name })
-        })
-        .catch((error) => {
-          // Handle login error
-          console.log(error);
-        });
+      .then((data) => {
+        socket.emit("add_task", { room_name: task.room_name });
+      })
+      .catch((error) => {
+        // Handle login error
+        console.log(error);
+      });
   };
 
   return (
-    <div className="border p-1 m-1 row">
-      <div className="col-10">{`${task.task_name} ${task.status}`}</div>
+    <div className="border rounded-3 p-2 m-1 mt-3 mb-3 row justify-content-between bg-light text-dark">
+      <div className="col-9 row p-0 m-0 justify-content-between">
+
+        <div className="col p-1" style={{ minWidth: "150px" }}>
+          {task.task_name.length > 15
+            ? `${task.task_name.slice(0, 12)}...`
+            : `${task.task_name}`}
+        </div>
+
+        {/*Check if there is status */}
+        {task.status && <div
+          className="col-4 p-0"
+        >
+          {/*Check for status */}
+          {task.status === "completed" ? (
+            <h6
+              className="d-inline-block p-0 mt-2"
+              style={{ fontSize: "12px" }}
+            >
+              <span className="badge text-bg-success">COMPLETED</span>
+            </h6>
+          ) : (
+            <h6
+              className="d-inline-block p-0 mt-2"
+              style={{ fontSize: "12px" }}
+            >
+              <span className="badge text-bg-warning">IMPORTANT</span>
+            </h6>
+          )}
+        </div>}
+      </div>
       <div className="col-1 m-0 p-0">
-      <div className="dropdown">
+        <div className="dropdown">
           <button
-            className="btn"
+            className="btn p-0 m-0 w-100 text-dark"
             type="button"
             data-bs-toggle="dropdown"
             aria-expanded="false"
@@ -104,31 +132,25 @@ function TaskCard({ task, socket }: TaskCardProps) {
           </button>
           <ul className="dropdown-menu">
             <li>
-              <button
-                className="dropdown-item"
-                onClick={handleModalOpen}
-              >
+              <button className="dropdown-item" onClick={handleModalOpen}>
                 Edit task
               </button>
             </li>
             <li>
-            <hr className="dropdown-divider" />
-          </li>
-          <li>
-              <button
-                className="dropdown-item"
-                onClick={handleRemoveModalOpen}
-              >
+              <hr className="dropdown-divider" />
+            </li>
+            <li>
+              <button className="dropdown-item" onClick={handleRemoveModalOpen}>
                 Remove
               </button>
             </li>
           </ul>
         </div>
-        </div>
+      </div>
       <div className="col-1 m-0 p-0">
         <div className="dropdown">
           <button
-            className="btn"
+            className="btn p-0 m-0 w-100 text-dark"
             type="button"
             data-bs-toggle="dropdown"
             aria-expanded="false"
@@ -139,7 +161,7 @@ function TaskCard({ task, socket }: TaskCardProps) {
             <li>
               <button
                 className="dropdown-item"
-                onClick={() => handleStatus('completed')}
+                onClick={() => handleStatus("completed")}
               >
                 Mark as completed
               </button>
@@ -147,9 +169,17 @@ function TaskCard({ task, socket }: TaskCardProps) {
             <li>
               <button
                 className="dropdown-item"
-                onClick={() => handleStatus('important')}
+                onClick={() => handleStatus("important")}
               >
                 Mark as important
+              </button>
+            </li>
+            <li>
+              <button
+                className="dropdown-item"
+                onClick={() => handleStatus("")}
+              >
+                Remove status
               </button>
             </li>
           </ul>

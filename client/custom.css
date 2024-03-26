@@ -31,7 +31,6 @@
     border: none;
     background-color: #343a40;
     padding: 25px;
-    min-width: 375px;
 }
 
 .form-control:focus {

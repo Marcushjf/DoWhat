@@ -13,19 +13,21 @@ interface RoomProps {
 }
 
 function Room({ socket, user, room }: RoomProps) {
-  const [messages, setMessages] = useState<any[]>([])
-  const [segments, setSegments] = useState<any[]>([])
-  const [tasks, setTasks] = useState<any[]>([])
-  const [users, setUsers] = useState<any[]>([])
-  const [error, setError] = useState([])
+  const [messages, setMessages] = useState<any[]>([]);
+  const [segments, setSegments] = useState<any[]>([]);
+  const [tasks, setTasks] = useState<any[]>([]);
+  const [users, setUsers] = useState<any[]>([]);
+  const [error, setError] = useState([]);
+  const [showColumn, setShowColumn] = useState(true);
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!user) {
-      navigate('/')
+      navigate("/");
     }
-  }, [user])
+  }, [user]);
 
   useEffect(() => {
     socket.emit("req_segments");
@@ -84,13 +86,32 @@ function Room({ socket, user, room }: RoomProps) {
         })
         .then((data) => {
           setUsers(data);
-          console.log(data)
+          console.log(data);
         })
         .catch((error) => {
           setError(error.message);
         });
     });
-  }, [socket])
+  }, [socket]);
+
+  // Function to toggle the visibility of the column
+  const toggleColumn = () => {
+    setShowColumn(!showColumn);
+  };
+
+  // Function to check if screen width is too small
+  const checkScreenSize = () => {
+    setIsSmallScreen(window.innerWidth < 1256); // Change 768 to the desired breakpoint
+  };
+
+  // Add event listener to check screen size on mount and window resize
+  useEffect(() => {
+    checkScreenSize();
+    window.addEventListener("resize", checkScreenSize);
+    return () => {
+      window.removeEventListener("resize", checkScreenSize);
+    };
+  }, []);
 
   function handleSend(message: string) {
     fetch(`${import.meta.env.VITE_BACKEND_URL}/api/chat/${room}`, {
@@ -118,41 +139,108 @@ function Room({ socket, user, room }: RoomProps) {
       });
   }
 
-
-
   return (
     <Fragment>
-      <div className="row d-flex flex-row justify-content-center p-3 m-0">
-        <h1 className="d-flex justify-content-center">{`${room}`}</h1>
-        <div className="" style={{ height: '85vh', width:'70vw' }}>
-          <TODO segments={segments} socket={socket} tasks={tasks} room={room} />
+      <div
+        className="offcanvas offcanvas-end"
+        tabIndex={-1}
+        id="offcanvasRight"
+        aria-labelledby="offcanvasRightLabel"
+      >
+        <div className="offcanvas-header">
+          <h5 className="offcanvas-title" id="offcanvasRightLabel">
+            {`${room}'s Chat`}
+          </h5>
+          <button
+            type="button"
+            className="btn-close"
+            data-bs-dismiss="offcanvas"
+            aria-label="Close"
+          ></button>
         </div>
-        <div
-          className="p-0 col-3 d-flex flex-column align-items-center "
-          style={{ height: "85vh" }}
-        >
-          <div className="overflow-hidden text-start w-100 mb-5" style={{ height: '25%' }}>
-            <ul className="list-group overflow-auto" style={{ border: 'none', height: '100%' }}>
-              <div className="card-header text-center">
-                Users
-              </div>
-              {users.map((user, index) => (
-                <li key={index} className="list-group-item">{user.name}</li>
-              ))}
-            </ul>
-          </div>
-
-
-
-          <div className="hmb-3 w-100 ms-0" style={{ height: '65%' }}>
-            <ChatDisplay messages={messages} user={user} />
-          </div>
-          <div className="w-100">
-            <ChatBox onSend={handleSend} />
-          </div>
+        <div className="offcanvas-body">
+          <Chat
+            user={user}
+            users={users}
+            messages={messages}
+            handleSend={handleSend}
+            small={isSmallScreen}
+          />
         </div>
       </div>
+
+      <div className="row d-flex flex-row justify-content-center p-2">
+        <h1 className="d-flex justify-content-center p-3">{`${room}`}</h1>
+        <div className=" col-md-8  mr-5" style={{ height: "85vh" }}>
+          <TODO segments={segments} socket={socket} tasks={tasks} room={room} />
+        </div>
+        {!isSmallScreen && (
+          <Chat
+            user={user}
+            users={users}
+            messages={messages}
+            handleSend={handleSend}
+            small={isSmallScreen}
+          />
+        )}
+      </div>
+
+      {isSmallScreen && (
+        <button
+          onClick={toggleColumn}
+          className="btn btn-secondary rounded-pill position-fixed bottom-0 end-0"
+          type="button"
+          data-bs-toggle="offcanvas"
+          data-bs-target="#offcanvasRight"
+          aria-controls="offcanvasRight"
+          style={{height:'80px', width:'120px', marginBottom:'50px', marginRight:'50px'}}
+        >
+          <i className="bi bi-chat-right-text-fill fs-1"></i>
+        </button>
+      )}
     </Fragment>
+  );
+}
+
+interface ChatProp {
+  user: string;
+  messages: any[];
+  users: any[];
+  handleSend: (message: string) => void;
+  small: boolean
+}
+
+function Chat({ user, users, messages, handleSend, small }: ChatProp) {
+  return (
+    <div
+      className="p-0 d-flex flex-column align-items-center"
+      style={{ height: "85vh", width: "360px" }}
+    >
+      {/* Check for screen cutoff */}
+      {!small && <div
+        className="overflow-hidden text-start w-100 mb-5"
+        style={{ height: "25%" }}
+      >
+        <ul
+          className="list-group overflow-auto"
+          style={{ border: "none", height: "100%" }}
+        >
+          <div className="card-header text-center">Users</div>
+          {users.map((user, index) => (
+            <li key={index} className="list-group-item">
+              {user.name}
+            </li>
+          ))}
+        </ul>
+      </div>}
+
+      <div className="hmb-3 w-100 mb-3" style={{ height: "65%" }}>
+        <ChatDisplay messages={messages} user={user} />
+      </div>
+      <div className="w-100">
+        <ChatBox onSend={handleSend} />
+      </div>
+    </div>
   );
 }
 

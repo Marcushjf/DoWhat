@@ -53,7 +53,7 @@ function Login({ login }: LoginProps) {
   }
 
   return (
-    <div className="container ">
+    <div className="d-flex flex-column h-100 justify-content-center">
       <div className="row justify-content-center mt-5">
         <div className="col-md-6">
           <div className="card">
