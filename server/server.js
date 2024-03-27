@@ -15,11 +15,14 @@ const segmentRoute = require('./routes/segmentRoute.js')
 const taskRoute = require('./routes/taskRoute.js')
 const chatRoute = require('./routes/chatRoute.js')
 
+const CORS = process.env.CORS_URL
+const allowedOrigins = CORS.split(',')
+
 const app = express();
 const server = http.createServer(app);  // Create an HTTP server
 const io = socketIo(server, {
     cors: {
-        origin: '*'
+        origin: allowedOrigins
     }
 });  // Attach Socket.IO to the server
 
@@ -84,9 +87,11 @@ io.on('connection', (socket) => {
 });
 
 //middleware
-app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }));
+app.use(cors({
+    origin: allowedOrigins
+}));
 
 //api to access db
 app.use("/api/room", roomRoute)
