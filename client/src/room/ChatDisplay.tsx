@@ -31,8 +31,8 @@ function ChatDisplay({ messages, user }: ChatDisplayProps) {
   return (
     <Fragment>
       <div
-        className="container text-center border border-secondary h-100 w-100 p-0 rounded-3  bg-black"
-        style={{ overflowY: "auto", display: "flex", flexDirection: "column-reverse" }} // Set display to flex and reverse flex direction
+        className="container text-center border border-secondary h-100 w-100 p-0 rounded-3"
+        style={{ overflowY: "auto", display: "flex", flexDirection: "column-reverse", backgroundColor:'rgba(50, 50, 50, 0.3)' }} // Set display to flex and reverse flex direction
       >
         {renderMessages()}
       </div>

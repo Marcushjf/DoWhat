@@ -181,7 +181,7 @@ function Home({ userid, socket, join }: HomeProps) {
         <div className="mt-4">
           <h2>Your Rooms</h2>
           {error && <div className="alert alert-danger">{error}</div>}
-          <div className="row row-cols-1 row-cols-md-2 g-4">
+          <div className="row row-cols-1 row-cols-md-3 g-4">
             {rooms.map((room, index) => (
               <div key={index} className="col">
                 <RoomCard room={room} socket={socket} userid={userid} join={join}/>

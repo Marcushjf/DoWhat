@@ -16,7 +16,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ show, onClose, onSubmit }) => {
   };
 
   return (
-    <div className={`modal${show ? " show" : ""}`} style={{ display: show ? "block" : "none" }}>
+    <div className={`modal${show ? " show" : ""} text-light`} style={{ display: show ? "block" : "none" }}>
       <div className="modal-dialog">
         <div className="modal-content">
           <div className="modal-header">

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Socket } from "socket.io-client";
 import TaskModal from "./TaskCardModal";
 import { ConfirmationModal } from "../modals/Confirmation";
+import TaskInfo from "./TaskInfo";
 
 interface TaskCardProps {
   task: any;
@@ -11,6 +12,11 @@ interface TaskCardProps {
 function TaskCard({ task, socket }: TaskCardProps) {
   const [showModal, setShowModal] = useState(false);
   const [showRemoveModal, setShowRemoveModal] = useState(false);
+  const [showTaskModal, setShowTaskModal] = useState(false);
+
+  const toggleModal = () => {
+    setShowTaskModal(true);
+  };
 
   const handleEdit = (task_name: string, description: string) => {
     fetch(`${import.meta.env.VITE_BACKEND_URL}/api/task/${task._id}`, {
@@ -90,7 +96,7 @@ function TaskCard({ task, socket }: TaskCardProps) {
 
   return (
     <div className="border rounded-3 p-2 m-1 mt-3 mb-3 row justify-content-between bg-light text-dark">
-      <div className="col-9 row p-0 m-0 justify-content-between">
+      <div className="col-9 row p-0 m-0 justify-content-between" onClick={toggleModal} style={{ cursor: 'pointer' }}>
 
         <div className="col p-1" style={{ minWidth: "150px" }}>
           {task.task_name.length > 15
@@ -196,7 +202,9 @@ function TaskCard({ task, socket }: TaskCardProps) {
         onConfirmRemove={handleRemove}
         message="remove task"
       />
+      <TaskInfo show={showTaskModal} task={task} onClose={() => setShowTaskModal(false)} />
     </div>
+
   );
 }
 
