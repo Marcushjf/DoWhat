@@ -4,11 +4,12 @@ interface TaskModalProps {
   show: boolean;
   onClose: () => void;
   onSubmit: (taskName: string, description: string) => void;
+  task: any
 }
 
-const TaskModal: React.FC<TaskModalProps> = ({ show, onClose, onSubmit }) => {
-  const [taskName, setTaskName] = useState("");
-  const [description, setDescription] = useState("");
+const TaskModal: React.FC<TaskModalProps> = ({ show, onClose, onSubmit, task }) => {
+  const [taskName, setTaskName] = useState(task.task_name);
+  const [description, setDescription] = useState(task.description);
 
   const handleSubmit = () => {
     onSubmit(taskName, description);

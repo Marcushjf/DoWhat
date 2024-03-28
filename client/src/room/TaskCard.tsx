@@ -195,6 +195,7 @@ function TaskCard({ task, socket }: TaskCardProps) {
         show={showModal}
         onClose={() => setShowModal(false)}
         onSubmit={handleEdit}
+        task={task}
       />
       <ConfirmationModal
         show={showRemoveModal}
