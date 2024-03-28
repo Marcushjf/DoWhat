@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { Socket } from "socket.io-client";
 import TaskModal from "./TaskCardModal";
 import { ConfirmationModal } from "../modals/Confirmation";
@@ -95,7 +95,8 @@ function TaskCard({ task, socket }: TaskCardProps) {
   };
 
   return (
-    <div className="border rounded-3 p-2 m-1 mt-3 mb-3 row justify-content-between bg-light text-dark">
+    <Fragment>
+      <div className="border rounded-3 p-2 m-1 mt-3 mb-3 row justify-content-between bg-light text-dark"  id="hoverCard">
       <div className="col-9 row p-0 m-0 justify-content-between" onClick={toggleModal} style={{ cursor: 'pointer' }}>
 
         <div className="col p-1" style={{ minWidth: "150px" }}>
@@ -191,7 +192,8 @@ function TaskCard({ task, socket }: TaskCardProps) {
           </ul>
         </div>
       </div>
-      <TaskModal
+    </div>
+    <TaskModal
         show={showModal}
         onClose={() => setShowModal(false)}
         onSubmit={handleEdit}
@@ -204,7 +206,8 @@ function TaskCard({ task, socket }: TaskCardProps) {
         message="remove task"
       />
       <TaskInfo show={showTaskModal} task={task} onClose={() => setShowTaskModal(false)} />
-    </div>
+    </Fragment>
+    
 
   );
 }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Socket } from "socket.io-client";
 
@@ -52,7 +52,8 @@ function RoomCard({ room, socket, userid, join }: RoomCardProps) {
     }
   
     return (
-      <div className="card">
+      <Fragment>
+        <div className="card"  id="hoverCard">
         <div className="card-body">
           <div className="row">
             <h5 className="card-title col">{`Room: ${room.room_name}`}</h5>
@@ -66,27 +67,29 @@ function RoomCard({ room, socket, userid, join }: RoomCardProps) {
               Leave Room
             </button>
           </div>
-          {/* Modal */}
-          <div className={`modal fade${showModal ? ' show' : ''}`} style={{ display: showModal ? 'block' : 'none' }}>
-            <div className="modal-dialog">
-              <div className="modal-content">
-                <div className="modal-header">
-                  <h5 className="modal-title">Confirm Leave Room</h5>
-                  <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
-                </div>
-                <div className="modal-body">
-                  Are you sure you want to leave the room?
-                </div>
-                <div className="modal-footer">
-                  <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>Cancel</button>
-                  <button type="button" className="btn btn-danger" onClick={confirmLeave}>Leave</button>
-                </div>
-              </div>
-            </div>
-          </div>
-          {/* End Modal */}
         </div>
       </div>
+      {/* Modal */}
+      <div className={`modal fade${showModal ? ' show' : ''}`} style={{ display: showModal ? 'block' : 'none' }}>
+      <div className="modal-dialog">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h5 className="modal-title">Confirm Leave Room</h5>
+            <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
+          </div>
+          <div className="modal-body">
+            Are you sure you want to leave the room?
+          </div>
+          <div className="modal-footer">
+            <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>Cancel</button>
+            <button type="button" className="btn btn-danger" onClick={confirmLeave}>Leave</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    {/* End Modal */}
+      </Fragment>
+      
     );
   }
 
