@@ -81,6 +81,11 @@ const registerUser = async (req, res) => {
 
     try {
 
+        //check if name consists of spacebar
+        if (/\s/.test(name)) {
+            return res.status(400).json({ message: 'Username cannot contain spaces.' });
+        }
+
         // Check if the user already exists
         const existingUser = await User.findOne({ name });
         if (existingUser) {
