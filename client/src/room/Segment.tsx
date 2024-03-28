@@ -152,7 +152,7 @@ function Segment({ segment, tasks, socket }: SegmentProps) {
       </div>
 
       <h3>{segment.segment_name}</h3>
-      <h5>{`By: ${segment.deadline}`}</h5>
+      {segment.deadline && <h5>{`Deadline : ${segment.deadline}`}</h5>}
       <div className="task-list">
         {tasks.map((task, index) => (
           <TaskCard key={index} task={task} socket={socket} />
@@ -186,6 +186,7 @@ function Segment({ segment, tasks, socket }: SegmentProps) {
           show={showEditModal}
           onCancel={() => setShowEditModal(false)}
           onEditSegment={handleEditSegment}
+          segment={segment}
         />
         <ConfirmationModal
           show={showRemoveModal}

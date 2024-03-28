@@ -22,6 +22,13 @@ const TODO = ({ segments, tasks, socket, room }: TODOProps) => {
 
   // Function to handle submission of the new segment
   const handleAddSegment = () => {
+
+    //check if name field is empty
+    if(!newSegmentName){
+      setError('Segment must have a name')
+      return
+    }
+
     fetch(`${import.meta.env.VITE_BACKEND_URL}/api/segment/`, {
             method: 'POST',
             headers: {
@@ -45,6 +52,7 @@ const TODO = ({ segments, tasks, socket, room }: TODOProps) => {
     setShowModal(false);
     setNewSegmentName(""); // Reset the segment name input
     setNewSegmentDeadline(""); // Reset the deadline input
+    setError(``) // Reset error message
   };
 
   // Function to handle canceling adding a new segment
@@ -52,6 +60,7 @@ const TODO = ({ segments, tasks, socket, room }: TODOProps) => {
     setShowModal(false);
     setNewSegmentName(""); // Reset the segment name input
     setNewSegmentDeadline(""); // Reset the deadline input
+    setError(``) // Reset error message
   };
 
   return (
@@ -99,7 +108,7 @@ const TODO = ({ segments, tasks, socket, room }: TODOProps) => {
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="segmentDeadline" className="form-label">Deadline</label>
+                  <label htmlFor="segmentDeadline" className="form-label">{`Deadline (Optional)`}</label>
                   <input
                     type="date"
                     id="segmentDeadline"

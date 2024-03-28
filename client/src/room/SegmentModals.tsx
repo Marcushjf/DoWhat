@@ -4,16 +4,15 @@ interface EditModalProps {
     show: boolean;
     onCancel: () => void;
     onEditSegment: (segmentName: string, deadline: string) => void;
+    segment: any
   }
   
-  export const EditModal: React.FC<EditModalProps> = ({ show, onCancel, onEditSegment }) => {
-    const [segmentName, setSegmentName] = useState('');
-    const [deadline, setDeadline] = useState('');
+  export const EditModal: React.FC<EditModalProps> = ({ show, onCancel, onEditSegment, segment }) => {
+    const [segmentName, setSegmentName] = useState(segment.segment_name);
+    const [deadline, setDeadline] = useState(segment.deadline);
   
     const handleEdit = () => {
       onEditSegment(segmentName, deadline);
-      setSegmentName('');
-      setDeadline('');
     };
   
     return (
@@ -38,7 +37,7 @@ interface EditModalProps {
                 />
               </div>
               <div className="mb-3">
-                <label htmlFor="segmentDeadline" className="form-label">Deadline</label>
+                <label htmlFor="segmentDeadline" className="form-label">{`Deadline (Optional)`}</label>
                 <input
                   type="date"
                   id="segmentDeadline"

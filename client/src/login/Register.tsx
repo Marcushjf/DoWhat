@@ -24,6 +24,18 @@ function Register() {
       return;
     }
 
+    //check if username is at least 4 characters long
+    if(name.length < 4){
+        setError(`Username must be at least 4 characters long`)
+        return
+    }
+
+    //check if password is at least 6 characters long
+    if(password.length < 6){
+        setError(`Password must be at least 6 characters long`)
+        return
+    }
+
     setLoading(true);
 
     // Make API call to authenticate user

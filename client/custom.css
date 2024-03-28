@@ -4,7 +4,7 @@
 /* Your custom overrides */
 [data-bs-theme=dark] {
   --bs-body-bg: #212529; /* Change the body background color */
-  --bs-secondary-bg: #343a40; /* Change the secondary background color */
+  --bs-secondary-bg: #ffffff; /* Change the secondary background color */
   --bs-primary-text-emphasis: #6ea8fe; /* Change the primary text emphasis color */
   --bs-link-color: #e5e5e5; /* Change the link color */
   --bs-link-hover-color: #bbbbbb; /* Change the link hover color */

@@ -1,6 +1,7 @@
 const {Room} = require('../models/Room.js')
 const{User} = require('../models/User.js')
 const{Occupant} = require('../models/Occupant.js')
+const bcrypt = require('bcrypt')
 
 const getProducts = async (req, res) => {
     try {
@@ -46,8 +47,9 @@ const addRoom = async (req,res)=>{
         }
     
         await Occupant.create({user:userid, room:room_name})
+        const hashedPassword = await bcrypt.hash(password, 10)
         
-        const room = await Room.create({ room_name, password:password, size:1, users:[userid]})
+        const room = await Room.create({ room_name, password:hashedPassword, size:1, users:[userid]})
         console.log(`${room_name} is created by ${userid}`)
         res.status(200).json(room)
     } catch (error) {
@@ -111,7 +113,8 @@ const joinRoom = async (req, res) => {
         }
 
         // Check if password is correct
-        if (existingRoom.password !== password) {
+        const isPasswordValid = await bcrypt.compare(password, existingRoom.password)
+        if (!isPasswordValid) {
             return res.status(404).json({ message: 'Password Incorrect.' });
         }
 

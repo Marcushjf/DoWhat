@@ -1,5 +1,6 @@
 const {User} = require('../models/User')
 const {Room} = require('../models/Room')
+const bcrypt = require('bcrypt')
 
 const getUsers = async (req, res )=>{
     try {
@@ -79,14 +80,18 @@ const registerUser = async (req, res) => {
     const { name, password} = req.body;
 
     try {
+
         // Check if the user already exists
         const existingUser = await User.findOne({ name });
-
         if (existingUser) {
             return res.status(400).json({ message: 'User already exists.' });
         }
+
+        //hash password
+        const hashedPassword = await bcrypt.hash(password, 10);
+
         // Create a new user using the addUser function
-        const newUser = await User.create(req.body)
+        const newUser = await User.create({name:name, password:hashedPassword})
         console.log(`${newUser.name} has registered`)
         res.status(201).json(newUser);
     } catch (error) {
@@ -106,7 +111,8 @@ const loginUser = async (req, res) => {
         }
 
         // Check if the password is correct
-        if (user.password !== password) {
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (!isPasswordValid) {
             return res.status(401).json({ message: 'Invalid password.' });
         }
 
