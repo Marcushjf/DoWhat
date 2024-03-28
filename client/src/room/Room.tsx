@@ -213,7 +213,7 @@ interface ChatProp {
 function Chat({ user, users, messages, handleSend, small }: ChatProp) {
   return (
     <div
-      className="p-0 d-flex flex-column align-items-center"
+      className="p-0 d-flex flex-column align-items-center m-0"
       style={{ height: "85vh", width: "360px" }}
     >
       {/* Check for screen cutoff */}

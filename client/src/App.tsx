@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 import Home from './home/Home';
 import Login from './login/Login';
 import Register from './login/Register';
+import Starfield from 'react-starfield';
 
 const socket = io(`${import.meta.env.VITE_BACKEND_URL}`);
 
@@ -25,6 +26,12 @@ const App: React.FC = () => {
   return(
     <BrowserRouter>
       <div className='h-100 w-100' style={{overflow:'auto'}}>
+      <Starfield
+              starCount={1000}
+              starColor={[255, 255, 255]}
+              speedFactor={0.05}
+              backgroundColor="black"
+            /> 
         <Fragment>
           <Routes>
             <Route path='/' element={<Login login={login}/>}/>
@@ -34,7 +41,8 @@ const App: React.FC = () => {
           </Routes>
         </Fragment>
       </div>
-    </BrowserRouter>
+    </BrowserRouter> 
+
   );
 };
 

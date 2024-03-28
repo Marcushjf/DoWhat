@@ -124,7 +124,7 @@ function Segment({ segment, tasks, socket }: SegmentProps) {
 
 
   return (
-    <div className="border p-2 position-relative rounded-3">
+    <div className="border p-2 position-relative rounded-3" style={{ backgroundColor: '#1c1f22'}}>
       <div className="dropdown position-absolute top-0 end-0 m-3">
         <button
           className="btn"
@@ -151,7 +151,7 @@ function Segment({ segment, tasks, socket }: SegmentProps) {
         </ul>
       </div>
 
-      <h3>{segment.segment_name}</h3>
+      <h3 className="p-3">{segment.segment_name}</h3>
       {segment.deadline && <h5>{`Deadline : ${segment.deadline}`}</h5>}
       <div className="task-list">
         {tasks.map((task, index) => (
