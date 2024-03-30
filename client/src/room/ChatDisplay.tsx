@@ -14,7 +14,7 @@ function ChatDisplay({ messages, user }: ChatDisplayProps) {
         <div
           key={i}
           className={`row ps-1 pe-1 m-0 justify-content-between text-start text-${text_col}`}
-          style={{ width: "100%" }}
+          style={{ width: "100%", position: "relative" }}
         >
           <p className="col-5">{`${createdAt.getHours().toString().padStart(2, '0')}:${createdAt.getMinutes().toString().padStart(2, '0')}\u00a0\u00a0${item.username.slice(0, 6)} : `}</p>
           <p
@@ -23,6 +23,13 @@ function ChatDisplay({ messages, user }: ChatDisplayProps) {
           >
             {item.message}
           </p>
+          {item.status === 'loading' &&
+            <div style={{ position: "absolute", right: 15, top: 2, width:'20px'}}>
+              <div className="spinner-border text-secondary justify-content-center" role="status" style={{width: '16px', height:'16px'}}>
+                <span className="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          }
         </div>
       );
     });
@@ -32,7 +39,7 @@ function ChatDisplay({ messages, user }: ChatDisplayProps) {
     <Fragment>
       <div
         className="container text-center border border-secondary h-100 w-100 p-0 rounded-3"
-        style={{ overflowY: "auto", display: "flex", flexDirection: "column-reverse", backgroundColor:'rgba(80, 80, 80, 0.2)' }} // Set display to flex and reverse flex direction
+        style={{ overflowY: "auto", display: "flex", flexDirection: "column-reverse", backgroundColor: 'rgba(80, 80, 80, 0.2)' }} // Set display to flex and reverse flex direction
       >
         {renderMessages()}
       </div>

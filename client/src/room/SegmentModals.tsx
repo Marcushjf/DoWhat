@@ -1,13 +1,12 @@
 import { useState } from "react";
 
 interface EditModalProps {
-    show: boolean;
-    onCancel: () => void;
     onEditSegment: (segmentName: string, deadline: string) => void;
     segment: any
+    id:string
   }
   
-  export const EditModal: React.FC<EditModalProps> = ({ show, onCancel, onEditSegment, segment }) => {
+  export const EditModal: React.FC<EditModalProps> = ({ onEditSegment, segment, id }) => {
     const [segmentName, setSegmentName] = useState(segment.segment_name);
     const [deadline, setDeadline] = useState(segment.deadline);
   
@@ -16,14 +15,12 @@ interface EditModalProps {
     };
   
     return (
-      <div className={`modal${show ? ' show' : ''}`} tabIndex={-1} role="dialog" style={{ display: show ? 'block' : 'none' }}>
+      <div className="modal fade" tabIndex={-1} role="dialog" id={id} aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div className="modal-dialog" role="document">
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title">Edit Segment</h5>
-              <button type="button" className="close" onClick={onCancel}>
-                <span>&times;</span>
-              </button>
+              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div className="modal-body">
               <div className="mb-3">
@@ -48,8 +45,8 @@ interface EditModalProps {
               </div>
             </div>
             <div className="modal-footer">
-              <button type="button" className="btn btn-secondary" onClick={handleEdit}>Save</button>
-              <button type="button" className="btn btn-danger" onClick={onCancel}>Cancel</button>
+              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={handleEdit}>Save</button>
+              <button type="button" className="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
             </div>
           </div>
         </div>

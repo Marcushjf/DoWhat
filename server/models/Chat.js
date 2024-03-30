@@ -14,7 +14,10 @@ const ChatSchema = mongoose.Schema(
             type: String,
             default:""
         },
-        
+        status:{
+            type: String,
+            default:""
+        }
     },
     {
         timestamps: true

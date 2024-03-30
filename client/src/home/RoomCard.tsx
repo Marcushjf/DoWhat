@@ -1,6 +1,7 @@
 import { Fragment, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Socket } from "socket.io-client";
+import { ConfirmationModal } from "../modals/Confirmation";
 
 interface RoomCardProps {
     room: Room,
@@ -16,12 +17,7 @@ interface Room {
   
 
 function RoomCard({ room, socket, userid, join }: RoomCardProps) {
-    const [showModal, setShowModal] = useState(false);
     const navigate = useNavigate()
-  
-    function leaveRoom() {
-      setShowModal(true);
-    }
   
     function confirmLeave() {
       fetch(`${import.meta.env.VITE_BACKEND_URL}/api/occupant/leave`, {
@@ -43,7 +39,6 @@ function RoomCard({ room, socket, userid, join }: RoomCardProps) {
           // Handle login error
           console.log(error);
         });
-      setShowModal(false);
     }
 
     function handleEnterRoom() {
@@ -53,7 +48,7 @@ function RoomCard({ room, socket, userid, join }: RoomCardProps) {
   
     return (
       <Fragment>
-        <div className="card"  id="hoverCard">
+        <div className="card">
         <div className="card-body">
           <div className="row">
             <h5 className="card-title col">{`Room: ${room.room_name}`}</h5>
@@ -63,30 +58,14 @@ function RoomCard({ room, socket, userid, join }: RoomCardProps) {
             <button type="button" className="btn btn-success me-2" onClick={handleEnterRoom}>
               Enter
             </button>
-            <button type="button" className="btn btn-danger" onClick={leaveRoom}>
+            <button type="button" className="btn btn-danger" data-bs-toggle="modal" data-bs-target={`#leave${room.room_name}`}>
               Leave Room
             </button>
           </div>
         </div>
       </div>
       {/* Modal */}
-      <div className={`modal fade${showModal ? ' show' : ''}`} style={{ display: showModal ? 'block' : 'none' }}>
-      <div className="modal-dialog">
-        <div className="modal-content">
-          <div className="modal-header">
-            <h5 className="modal-title">Confirm Leave Room</h5>
-            <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
-          </div>
-          <div className="modal-body">
-            Are you sure you want to leave the room?
-          </div>
-          <div className="modal-footer">
-            <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>Cancel</button>
-            <button type="button" className="btn btn-danger" onClick={confirmLeave}>Leave</button>
-          </div>
-        </div>
-      </div>
-    </div>
+      <ConfirmationModal onConfirmRemove={confirmLeave} id={`leave${room.room_name}`} message="leave room"/>
     {/* End Modal */}
       </Fragment>
       

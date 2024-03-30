@@ -17,7 +17,8 @@ const TaskModal: React.FC<TaskModalProps> = ({ show, onClose, onSubmit, task }) 
   };
 
   return (
-    <div className={`modal${show ? " show" : ""} text-light`} style={{ display: show ? "block" : "none" }}>
+    
+    <div className={`${show ? " show" : ""} text-light p-3 m-2 bg-body rounded-3 border border-secondary`} style={{ display: show ? "block" : "none"}}>
       <div className="modal-dialog">
         <div className="modal-content">
           <div className="modal-header">
@@ -35,7 +36,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ show, onClose, onSubmit, task }) 
             </div>
           </div>
           <div className="modal-footer">
-            <button type="button" className="btn btn-secondary" onClick={onClose}>Cancel</button>
+            <button type="button" className="btn btn-secondary mr-3" onClick={onClose}>Cancel</button>
             <button type="button" className="btn btn-primary" onClick={handleSubmit}>Edit</button>
           </div>
         </div>

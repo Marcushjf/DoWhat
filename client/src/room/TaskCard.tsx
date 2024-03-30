@@ -9,14 +9,8 @@ interface TaskCardProps {
   socket: Socket;
 }
 
-function TaskCard({ task, socket }: TaskCardProps) {
+function TaskCard({ task, socket}: TaskCardProps) {
   const [showModal, setShowModal] = useState(false);
-  const [showRemoveModal, setShowRemoveModal] = useState(false);
-  const [showTaskModal, setShowTaskModal] = useState(false);
-
-  const toggleModal = () => {
-    setShowTaskModal(true);
-  };
 
   const handleEdit = (task_name: string, description: string) => {
     fetch(`${import.meta.env.VITE_BACKEND_URL}/api/task/${task._id}`, {
@@ -61,15 +55,10 @@ function TaskCard({ task, socket }: TaskCardProps) {
         // Handle login error
         console.log(error);
       });
-    setShowRemoveModal(false);
   };
 
   const handleModalOpen = () => {
     setShowModal(true);
-  };
-
-  const handleRemoveModalOpen = () => {
-    setShowRemoveModal(true);
   };
 
   const handleStatus = (status: string) => {
@@ -96,9 +85,8 @@ function TaskCard({ task, socket }: TaskCardProps) {
 
   return (
     <Fragment>
-      <div className="border rounded-3 p-2 m-1 mt-3 mb-3 row justify-content-between bg-light text-dark"  id="hoverCard">
-      <div className="col-9 row p-0 m-0 justify-content-between" onClick={toggleModal} style={{ cursor: 'pointer' }}>
-
+      <div className="border rounded-3 p-2 m-1 mt-3 mb-3 row justify-content-between bg-light text-dark">
+      <div className="col-9 row p-0 m-0 justify-content-between" data-bs-toggle="modal" data-bs-target={`#info${task._id}`} style={{ cursor: 'pointer'}}>
         <div className="col p-1" style={{ minWidth: "150px" }}>
           {task.task_name.length > 15
             ? `${task.task_name.slice(0, 12)}...`
@@ -147,7 +135,7 @@ function TaskCard({ task, socket }: TaskCardProps) {
               <hr className="dropdown-divider" />
             </li>
             <li>
-              <button className="dropdown-item" onClick={handleRemoveModalOpen}>
+              <button className="dropdown-item" data-bs-toggle="modal" data-bs-target={`#remove${task._id}`}>
                 Remove
               </button>
             </li>
@@ -193,19 +181,19 @@ function TaskCard({ task, socket }: TaskCardProps) {
         </div>
       </div>
     </div>
-    <TaskModal
+      <TaskModal
         show={showModal}
         onClose={() => setShowModal(false)}
         onSubmit={handleEdit}
         task={task}
       />
       <ConfirmationModal
-        show={showRemoveModal}
-        onCancel={() => setShowRemoveModal(false)}
         onConfirmRemove={handleRemove}
+        id={`remove${task._id}`}
         message="remove task"
       />
-      <TaskInfo show={showTaskModal} task={task} onClose={() => setShowTaskModal(false)} />
+      <TaskInfo task={task} id={`info${task._id}`} />
+
     </Fragment>
     
 

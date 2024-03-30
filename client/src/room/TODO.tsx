@@ -10,15 +10,9 @@ interface TODOProps {
 }
 
 const TODO = ({ segments, tasks, socket, room }: TODOProps) => {
-  const [showModal, setShowModal] = useState(false);
   const [newSegmentName, setNewSegmentName] = useState("");
   const [newSegmentDeadline, setNewSegmentDeadline] = useState("");
   const [error, setError] = useState("")
-
-  // Function to add a new segment
-  const addSegment = () => {
-    setShowModal(true);
-  };
 
   // Function to handle submission of the new segment
   const handleAddSegment = () => {
@@ -49,7 +43,6 @@ const TODO = ({ segments, tasks, socket, room }: TODOProps) => {
             // Handle error
             setError(error.message);
         });
-    setShowModal(false);
     setNewSegmentName(""); // Reset the segment name input
     setNewSegmentDeadline(""); // Reset the deadline input
     setError(``) // Reset error message
@@ -57,7 +50,6 @@ const TODO = ({ segments, tasks, socket, room }: TODOProps) => {
 
   // Function to handle canceling adding a new segment
   const handleCancel = () => {
-    setShowModal(false);
     setNewSegmentName(""); // Reset the segment name input
     setNewSegmentDeadline(""); // Reset the deadline input
     setError(``) // Reset error message
@@ -78,7 +70,7 @@ const TODO = ({ segments, tasks, socket, room }: TODOProps) => {
         <div style={{ width: "365px" }}>
           <button
             className="btn btn-secondary ps-2 pe-2 w-100"
-            onClick={addSegment}
+            data-bs-toggle="modal" data-bs-target={`#addSeg${room}`}
           >
             <i className="bi bi-plus-lg"></i>Add a Goal/Objective
           </button>
@@ -86,59 +78,58 @@ const TODO = ({ segments, tasks, socket, room }: TODOProps) => {
       </div>
 
       {/* Modal for adding a new segment */}
-      {showModal && (
-        <div className="modal" tabIndex={-1} role="dialog" style={{ display: 'block', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
-          <div className="modal-dialog" role="document">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Add New Segment</h5>
-                <button type="button" className="close" onClick={handleCancel}>
-                  <span>&times;</span>
-                </button>
+      <div className="modal fade" id={`addSeg${room}`} tabIndex={-1} role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">Add New Segment</h5>
+              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div className="modal-body">
+              <div className="mb-3">
+                <label htmlFor="segmentName" className="form-label">Segment Name</label>
+                <input
+                  type="text"
+                  id="segmentName"
+                  className="form-control"
+                  value={newSegmentName}
+                  onChange={(e) => setNewSegmentName(e.target.value)}
+                />
               </div>
-              <div className="modal-body">
-                <div className="mb-3">
-                  <label htmlFor="segmentName" className="form-label">Segment Name</label>
-                  <input
-                    type="text"
-                    id="segmentName"
-                    className="form-control"
-                    value={newSegmentName}
-                    onChange={(e) => setNewSegmentName(e.target.value)}
-                  />
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="segmentDeadline" className="form-label">{`Deadline (Optional)`}</label>
-                  <input
-                    type="date"
-                    id="segmentDeadline"
-                    className="form-control"
-                    value={newSegmentDeadline}
-                    onChange={(e) => setNewSegmentDeadline(e.target.value)}
-                  />
-                </div>
+              <div className="mb-3">
+                <label htmlFor="segmentDeadline" className="form-label">{`Deadline (Optional)`}</label>
+                <input
+                  type="date"
+                  id="segmentDeadline"
+                  className="form-control"
+                  value={newSegmentDeadline}
+                  onChange={(e) => setNewSegmentDeadline(e.target.value)}
+                />
               </div>
-              {error && <div className="alert alert-danger">{error}</div>}
-              <div className="modal-footer">
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  onClick={handleAddSegment}
-                >
-                  Add
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-danger"
-                  onClick={handleCancel}
-                >
-                  Cancel
-                </button>
-              </div>
+            </div>
+            {error && <div className="alert alert-danger">{error}</div>}
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                data-bs-dismiss="modal"
+                onClick={handleAddSegment}
+              >
+                Add
+              </button>
+              <button
+                type="button"
+                className="btn btn-danger"
+                data-bs-dismiss="modal"
+                onClick={handleCancel}
+              >
+                Cancel
+              </button>
             </div>
           </div>
         </div>
-      )}
+      </div>
+
     </div>
   );
 };

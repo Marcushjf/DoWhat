@@ -113,7 +113,13 @@ function Room({ socket, user, room }: RoomProps) {
     };
   }, []);
 
-  function handleSend(message: string) {
+  function handleSend (message: string) {
+
+    const currentTime = new Date();
+    const formattedTime = currentTime.toLocaleString(); // Format as per your requirement
+
+    setMessages((prevMessages) => [...prevMessages, { room_name: room, message: `${message}`, username: user, status:'loading' ,createdAt: formattedTime }]);
+
     fetch(`${import.meta.env.VITE_BACKEND_URL}/api/chat/${room}`, {
       method: "POST",
       headers: {
@@ -122,6 +128,7 @@ function Room({ socket, user, room }: RoomProps) {
       body: JSON.stringify({
         message: message,
         username: user,
+
       }),
     })
       .then((response) => {
@@ -193,7 +200,7 @@ function Room({ socket, user, room }: RoomProps) {
           data-bs-toggle="offcanvas"
           data-bs-target="#offcanvasRight"
           aria-controls="offcanvasRight"
-          style={{height:'80px', width:'120px', marginBottom:'50px', marginRight:'50px'}}
+          style={{ height: '80px', width: '120px', marginBottom: '50px', marginRight: '50px' }}
         >
           <i className="bi bi-chat-right-text-fill fs-1"></i>
         </button>

@@ -3,7 +3,6 @@ import TaskCard from "./TaskCard";
 import { Socket } from "socket.io-client";
 import { EditModal } from "./SegmentModals";
 import { ConfirmationModal } from "../modals/Confirmation";
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 interface SegmentProps {
   segment: any;
@@ -13,7 +12,6 @@ interface SegmentProps {
 
 function Segment({ segment, tasks, socket }: SegmentProps) {
   const [showEditModal, setShowEditModal] = useState(false);
-  const [showRemoveModal, setShowRemoveModal] = useState(false);
   const [showInput, setShowInput] = useState(false);
   const [newTaskName, setNewTaskName] = useState("");
   const [error, setError] = useState("");
@@ -48,10 +46,6 @@ function Segment({ segment, tasks, socket }: SegmentProps) {
         setError(error.message);
       });
     setShowEditModal(false);
-  };
-
-  const handleRemove = () => {
-    setShowRemoveModal(true)
   };
 
   const handleAddTask = () => {
@@ -119,12 +113,11 @@ function Segment({ segment, tasks, socket }: SegmentProps) {
         // Handle login error
         console.log(error);
       });
-    setShowRemoveModal(false);
   };
 
 
   return (
-    <div className="border p-2 position-relative rounded-4" style={{ backgroundColor: '#1c1f22'}}>
+    <div className="border p-2 position-relative rounded-4" style={{ backgroundColor: '#1c1f22' }}>
       <div className="dropdown position-absolute top-0 end-0 m-3">
         <button
           className="btn"
@@ -136,7 +129,7 @@ function Segment({ segment, tasks, socket }: SegmentProps) {
         </button>
         <ul className="dropdown-menu">
           <li>
-            <button className="dropdown-item" onClick={() => handleEdit()}>
+            <button className="dropdown-item" data-bs-toggle="modal" data-bs-target={`#edit${segment._id}`}>
               Edit
             </button>
           </li>
@@ -144,7 +137,7 @@ function Segment({ segment, tasks, socket }: SegmentProps) {
             <hr className="dropdown-divider" />
           </li>
           <li>
-            <button className="dropdown-item" onClick={() => handleRemove()}>
+            <button className="dropdown-item" data-bs-toggle="modal" data-bs-target={`#remove${segment._id}`}>
               Remove
             </button>
           </li>
@@ -162,13 +155,13 @@ function Segment({ segment, tasks, socket }: SegmentProps) {
       <div className="p-2">
         {showInput ? (
           <div className="hstack gap-2">
-            <input className="form-control p-1 m-0 ps-2" type="text" placeholder="Task name" aria-label="Task name" value={newTaskName} onChange={handleInputChange}/>
-            <button type="button" className="btn btn-secondary p-1" style={{width:'50px'}} onClick={handleSubmit}>Add</button>
+            <input className="form-control p-1 m-0 ps-2" type="text" placeholder="Task name" aria-label="Task name" value={newTaskName} onChange={handleInputChange} />
+            <button type="button" className="btn btn-secondary p-1" style={{ width: '50px' }} onClick={handleSubmit}>Add</button>
             <div className="vr"></div>
-            <button type="button" className="btn btn-outline-danger p-1" style={{width:'50px'}} onClick={handleCancel}><i className="bi bi-x-lg"></i></button>
+            <button type="button" className="btn btn-outline-danger p-1" style={{ width: '50px' }} onClick={handleCancel}><i className="bi bi-x-lg"></i></button>
             {error && <div className="alert alert-danger">{error}</div>}
           </div>
-          
+
         ) : (
           <button
             className="btn btn-secondary w-100 p-2 rounded-pill"
@@ -181,19 +174,9 @@ function Segment({ segment, tasks, socket }: SegmentProps) {
       </div>
 
       <div>
-        {/* Segment content */}
-        <EditModal
-          show={showEditModal}
-          onCancel={() => setShowEditModal(false)}
-          onEditSegment={handleEditSegment}
-          segment={segment}
-        />
-        <ConfirmationModal
-          show={showRemoveModal}
-          onCancel={() => setShowRemoveModal(false)}
-          onConfirmRemove={handleConfirmRemove}
-          message="remove segment"
-        />
+        {/* Modals */}
+        <EditModal onEditSegment={handleEditSegment} segment={segment} id={`edit${segment._id}`}/>
+        <ConfirmationModal onConfirmRemove={handleConfirmRemove} id={`remove${segment._id}`} message="remove segment" />
       </div>
     </div>
   );
