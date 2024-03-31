@@ -1,15 +1,13 @@
 import React, { useState } from "react";
 
 interface CreateRoomModalProps {
-  show: boolean;
-  onClose: () => void;
   onSubmit: (roomName: string, password: string) => void;
+  id:string
 }
 
 const CreateRoomModal: React.FC<CreateRoomModalProps> = ({
-  show,
-  onClose,
   onSubmit,
+  id
 }) => {
   const [roomName, setRoomName] = useState("");
   const [password, setPassword] = useState("");
@@ -26,6 +24,10 @@ const CreateRoomModal: React.FC<CreateRoomModalProps> = ({
       return;
     }
     onSubmit(roomName, password);
+    const closeButton = document.querySelector(`#${id} .btn-close`) as HTMLButtonElement;
+    if (closeButton) {
+      closeButton.click();
+    }
     setRoomName("");
     setPassword("");
     setConfirmPassword("");
@@ -33,12 +35,12 @@ const CreateRoomModal: React.FC<CreateRoomModalProps> = ({
   };
 
   return (
-    <div className={`modal fade${show ? " show" : ""}`} style={{ display: show ? "block" : "none" }}>
+    <div className="modal fade" id={id} tabIndex={-1} aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div className="modal-dialog">
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title">Create Room</h5>
-            <button type="button" className="btn-close" onClick={onClose}></button>
+            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div className="modal-body">
             {error && <div className="alert alert-danger">{error}</div>}
@@ -83,7 +85,7 @@ const CreateRoomModal: React.FC<CreateRoomModalProps> = ({
           <button type="button" className="btn btn-primary" onClick={handleSubmit}>
               Create
             </button>
-            <button type="button" className="btn btn-secondary" onClick={onClose}>
+            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
               Cancel
             </button>
           </div>

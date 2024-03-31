@@ -18,31 +18,36 @@ const TODO = ({ segments, tasks, socket, room }: TODOProps) => {
   const handleAddSegment = () => {
 
     //check if name field is empty
-    if(!newSegmentName){
+    if (!newSegmentName) {
       setError('Segment must have a name')
       return
     }
 
     fetch(`${import.meta.env.VITE_BACKEND_URL}/api/segment/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ segment_name:newSegmentName, room_name:room, deadline:newSegmentDeadline})
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error adding segment.');
-            }
-            return response.json();
-        })
-        .then(data => {
-            socket.emit('add_segment',({room_name:room}))
-        })
-        .catch(error => {
-            // Handle error
-            setError(error.message);
-        });
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ segment_name: newSegmentName, room_name: room, deadline: newSegmentDeadline })
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Error adding segment.');
+        }
+        return response.json();
+      })
+      .then(data => {
+        socket.emit('add_segment', ({ room_name: room }))
+        //close modal
+        const closeButton = document.querySelector(`#${`addSeg${room}`} .btn-close`) as HTMLButtonElement;
+        if (closeButton) {
+          closeButton.click();
+        }
+      })
+      .catch(error => {
+        // Handle error
+        setError(error.message);
+      });
     setNewSegmentName(""); // Reset the segment name input
     setNewSegmentDeadline(""); // Reset the deadline input
     setError(``) // Reset error message
@@ -56,7 +61,7 @@ const TODO = ({ segments, tasks, socket, room }: TODOProps) => {
   };
 
   return (
-    <div className="container border rounded-3 h-100 pt-3 ps-0 pe-0" style={{backgroundColor:'rgba(80, 80, 80, 0.2)'}}>
+    <div className="container border rounded-3 h-100 pt-3 ps-0 pe-0" style={{ backgroundColor: 'rgba(80, 80, 80, 0.2)' }}>
       <div className="row flex-nowrap overflow-auto w-100 h-100 m-0">
         {segments.map((segment, index) => (
           <div key={index} className="" style={{ width: "380px" }}>
@@ -112,7 +117,6 @@ const TODO = ({ segments, tasks, socket, room }: TODOProps) => {
               <button
                 type="button"
                 className="btn btn-secondary"
-                data-bs-dismiss="modal"
                 onClick={handleAddSegment}
               >
                 Add

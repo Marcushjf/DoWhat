@@ -23,7 +23,6 @@ function Home({ userid, socket, join }: HomeProps) {
   const [error, setError] = useState("");
   const [notif, setNotif] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [showJoinModal, setShowJoinModal] = useState(false);
   const [showNotif, setShowNotif] = useState(false);
   const navigate = useNavigate()
 
@@ -32,15 +31,6 @@ function Home({ userid, socket, join }: HomeProps) {
       navigate('/')
     }
   },[userid])
-
-  const handleJoinRoom = () => {
-    // Handle joining room logic
-    setShowJoinModal(true);
-  };
-
-  const handleCloseJoinModal = () => {
-    setShowJoinModal(false);
-  };
 
   const handleCreateRoom = () => {
     setShowModal(true);
@@ -77,7 +67,6 @@ function Home({ userid, socket, join }: HomeProps) {
         setNotif("Successfully joined room");
         setShowNotif(true);
         socket.emit("join", {username:userid, room_name:roomName});
-        console.log(data);
       })
       .catch((error) => {
         // Handle login error
@@ -85,7 +74,6 @@ function Home({ userid, socket, join }: HomeProps) {
         setShowNotif(true);
         setError(error.message);
       });
-    setShowJoinModal(false);
   }
 
   const handleSubmitModal = (roomName: string, password: string) => {
@@ -166,14 +154,14 @@ function Home({ userid, socket, join }: HomeProps) {
           <button
             type="button"
             className="btn btn-primary me-2"
-            onClick={handleJoinRoom}
+            data-bs-toggle="modal" data-bs-target="#join"
           >
             Join Room
           </button>
           <button
             type="button"
             className="btn btn-success"
-            onClick={handleCreateRoom}
+            data-bs-toggle="modal" data-bs-target="#create"
           >
             Create Room
           </button>
@@ -191,14 +179,12 @@ function Home({ userid, socket, join }: HomeProps) {
         </div>
       </div>
       <CreateRoomModal
-        show={showModal}
-        onClose={handleCloseModal}
         onSubmit={handleSubmitModal}
+        id="create"
       />
       <JoinRoomModal
-        show={showJoinModal}
-        onClose={handleCloseJoinModal}
         onSubmit={handleJoinModal}
+        id={'join'}
       />
       {showNotif && <Notification message={notif} onClose={() => setShowNotif(false)} />}
     </Fragment>

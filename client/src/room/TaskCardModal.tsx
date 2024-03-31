@@ -10,9 +10,15 @@ interface TaskModalProps {
 const TaskModal: React.FC<TaskModalProps> = ({ show, onClose, onSubmit, task }) => {
   const [taskName, setTaskName] = useState(task.task_name);
   const [description, setDescription] = useState(task.description);
+  const [error, setError] = useState("");
 
   const handleSubmit = () => {
+    if (!taskName) {
+      setError("Task name is required.");
+      return;
+    }
     onSubmit(taskName, description);
+    setError("");
     onClose();
   };
 
@@ -34,6 +40,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ show, onClose, onSubmit, task }) 
               <label htmlFor="description" className="form-label">Description</label>
               <textarea className="form-control" id="description" rows={3} value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
             </div>
+            {error && <div className="alert alert-danger">{error}</div>}
           </div>
           <div className="modal-footer">
             <button type="button" className="btn btn-secondary mr-3" onClick={onClose}>Cancel</button>

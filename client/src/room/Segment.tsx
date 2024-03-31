@@ -159,7 +159,6 @@ function Segment({ segment, tasks, socket }: SegmentProps) {
             <button type="button" className="btn btn-secondary p-1" style={{ width: '50px' }} onClick={handleSubmit}>Add</button>
             <div className="vr"></div>
             <button type="button" className="btn btn-outline-danger p-1" style={{ width: '50px' }} onClick={handleCancel}><i className="bi bi-x-lg"></i></button>
-            {error && <div className="alert alert-danger">{error}</div>}
           </div>
 
         ) : (
