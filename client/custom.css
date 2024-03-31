@@ -71,3 +71,7 @@
 #sideBarCard:active {
   background-color: #a1a1a165;
 }
+
+#sideBarCollapse:hover {
+  background-color: #8181812c;
+}

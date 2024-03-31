@@ -68,9 +68,7 @@ const App: React.FC = () => {
         backgroundColor="black"
       />
       {username && (
-        <div className='col-2 p-0' style={{ width: '320px' }}>
-          <SideBar rooms={rooms} />
-        </div>
+        <SideBar rooms={rooms} />
       )}
       <div className='col'>
         <Routes>

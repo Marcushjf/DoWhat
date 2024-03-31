@@ -1,49 +1,138 @@
 import { Link } from "react-router-dom"
 import 'bootstrap/js/dist/collapse'
 import { Fragment } from "react/jsx-runtime"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 interface SideBarProp {
     rooms: any[]
 }
 
 function SideBar({ rooms }: SideBarProp) {
+
+    const [isSmallScreen, setIsSmallScreen] = useState(false);
+    const [show, setShow] = useState(true)
+    // Function to check if screen width is too small
+    const checkScreenSize = () => {
+        setIsSmallScreen(window.innerWidth < 1577);
+    };
+
+    // Add event listener to check screen size on mount and window resize
+    useEffect(() => {
+        checkScreenSize();
+        window.addEventListener("resize", checkScreenSize);
+        return () => {
+            window.removeEventListener("resize", checkScreenSize);
+        };
+    }, []);
+
     return (
-        <div className="d-flex flex-column bg-body justify-content-space-between vh-100">
-            <Link to="/home" className="d-flex p-4 ms-3 ">
-                <i className="bi bi-bootstrap fs-5 me-2"></i>
-                <span className="fs-4">DoWhat</span>
-            </Link>
-            <hr className="text-secondary m-0" />
-            <ul className="nav nav-pills flex-column pt-3 pb-3" id="parentM">
-                <li className="nav-item p-2 ps-4">
-                    <Link to="/home" className="nav-link">
-                        <i className="bi bi-house me-2 fs-5"></i>
-                        <span className="fs-5">Home</span>
+        <Fragment>
+            <div
+                className="offcanvas offcanvas-start"
+                tabIndex={-1}
+                id="offcanvasSideBar"
+                aria-labelledby="offcanvasRightLabel"
+            >
+                <div className="offcanvas-body p-0 m-0">
+                    <div className="d-flex flex-column bg-body justify-content-space-between vh-100">
+                        <Link to="/home" className="d-flex p-4 ms-3 ">
+                            <i className="bi bi-bootstrap fs-5 me-2"></i>
+                            <span className="fs-4">DoWhat</span>
+                        </Link>
+                        <hr className="text-secondary m-0" />
+                        <ul className="nav nav-pills flex-column pt-3 pb-3" id="parentM">
+                            <li className="nav-item p-2 ps-4">
+                                <Link to="/home" className="nav-link">
+                                    <i className="bi bi-house me-2 fs-5"></i>
+                                    <span className="fs-5">Home</span>
+                                </Link>
+                            </li>
+                            <li className="nav-item p-2 ps-4">
+                                <Link to="/" className="nav-link">
+                                    <i className="bi bi-speedometer me-2 fs-5"></i>
+                                    <span className="fs-5">WIP</span>
+                                </Link>
+                            </li>
+                            <li className="nav-item p-2 ps-4">
+                                <Link to="/" className="nav-link">
+                                    <i className="bi bi-speedometer me-2 fs-5"></i>
+                                    <span className="fs-5">WIP</span>
+                                </Link>
+                            </li>
+                            <li className="nav-item p-2 ps-4">
+                                <Link to="/" className="nav-link">
+                                    <i className="bi bi-speedometer me-2 fs-5"></i>
+                                    <span className="fs-5">WIP</span>
+                                </Link>
+                            </li>
+                        </ul>
+                        <hr className="text-secondary m-0" />
+                        <Collapse rooms={rooms} />
+                    </div>
+                </div>
+            </div>
+            {(!isSmallScreen && show) &&
+                <div className="d-flex flex-column bg-body justify-content-space-between vh-100" style={{ width: '320px', position: 'relative' }}>
+                    <button type="button" className="btn text-light" id="sideBarCollapse" onClick={() => { setShow(prevShow => !prevShow) }} style={{ position: 'absolute', right: 3, top: 3, width: '50px', height: '50px' }}><i className="bi bi-layout-sidebar"></i></button>
+                    <Link to="/home" className="d-flex p-4 ms-3 ">
+                        <i className="bi bi-bootstrap fs-5 me-2"></i>
+                        <span className="fs-4">DoWhat</span>
                     </Link>
-                </li>
-                <li className="nav-item p-2 ps-4">
-                    <Link to="/" className="nav-link">
-                        <i className="bi bi-speedometer me-2 fs-5"></i>
-                        <span className="fs-5">WIP</span>
-                    </Link>
-                </li>
-                <li className="nav-item p-2 ps-4">
-                    <Link to="/" className="nav-link">
-                        <i className="bi bi-speedometer me-2 fs-5"></i>
-                        <span className="fs-5">WIP</span>
-                    </Link>
-                </li>
-                <li className="nav-item p-2 ps-4">
-                    <Link to="/" className="nav-link">
-                        <i className="bi bi-speedometer me-2 fs-5"></i>
-                        <span className="fs-5">WIP</span>
-                    </Link>
-                </li>
-            </ul>
-            <hr className="text-secondary m-0" />
-            <Collapse rooms={rooms} />
-        </div>
+                    <hr className="text-secondary m-0" />
+                    <ul className="nav nav-pills flex-column pt-3 pb-3" id="parentM">
+                        <li className="nav-item p-2 ps-4">
+                            <Link to="/home" className="nav-link">
+                                <i className="bi bi-house me-2 fs-5"></i>
+                                <span className="fs-5">Home</span>
+                            </Link>
+                        </li>
+                        <li className="nav-item p-2 ps-4">
+                            <Link to="/" className="nav-link">
+                                <i className="bi bi-speedometer me-2 fs-5"></i>
+                                <span className="fs-5">WIP</span>
+                            </Link>
+                        </li>
+                        <li className="nav-item p-2 ps-4">
+                            <Link to="/" className="nav-link">
+                                <i className="bi bi-speedometer me-2 fs-5"></i>
+                                <span className="fs-5">WIP</span>
+                            </Link>
+                        </li>
+                        <li className="nav-item p-2 ps-4">
+                            <Link to="/" className="nav-link">
+                                <i className="bi bi-speedometer me-2 fs-5"></i>
+                                <span className="fs-5">WIP</span>
+                            </Link>
+                        </li>
+                    </ul>
+                    <hr className="text-secondary m-0" />
+                    <Collapse rooms={rooms} />
+                </div>}
+
+            {isSmallScreen && 
+                <button
+                    className="btn text-light position-fixed top-0 start-0"
+                    type="button"
+                    data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasSideBar"
+                    aria-controls="offcanvasSideBar"
+                    style={{ height: '50px', width: '50px', zIndex:2000}}
+                >
+                    <i className="bi bi-layout-sidebar"></i>
+                </button>
+            }
+            {(!show && !isSmallScreen) &&
+                <button
+                    className="btn text-light position-fixed top-0 start-0"
+                    type="button"
+                    onClick={()=>{setShow(prevShow=>!prevShow)}}
+                    style={{ height: '50px', width: '50px', zIndex:2000}}
+                >
+                    <i className="bi bi-layout-sidebar"></i>
+                </button>
+            }
+        </Fragment>
+
     )
 }
 
@@ -59,7 +148,7 @@ function Collapse({ rooms }: CollapseProp) {
                 <span className="fs-6 pe-3">Rooms</span>
                 <i className="bi bi-arrow-right-short"></i>
             </div>
-            {show ? (
+            {!show ? (
                 <div>
                     <hr className="text-secondary m-0 ms-4 me-4" />
                 </div>
