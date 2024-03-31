@@ -6,7 +6,7 @@ interface TODOProps {
   segments: any[];
   tasks: any[];
   socket: Socket;
-  room: string
+  room?: string
 }
 
 const TODO = ({ segments, tasks, socket, room }: TODOProps) => {

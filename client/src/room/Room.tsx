@@ -3,16 +3,15 @@ import ChatBox from "./ChatBox";
 import ChatDisplay from "./ChatDisplay";
 import { Socket } from "socket.io-client";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import TODO from "./TODO";
 
 interface RoomProps {
   socket: Socket;
   user: string;
-  room: string;
 }
 
-function Room({ socket, user, room }: RoomProps) {
+function Room({ socket, user}: RoomProps) {
   const [messages, setMessages] = useState<any[]>([]);
   const [segments, setSegments] = useState<any[]>([]);
   const [tasks, setTasks] = useState<any[]>([]);
@@ -22,9 +21,10 @@ function Room({ socket, user, room }: RoomProps) {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
 
   const navigate = useNavigate();
+  const { room_id } = useParams<{ room_id?: string }>();
 
   useEffect(() => {
-    if (!user) {
+    if (!user || !room_id) {
       navigate("/");
     }
   }, [user]);
@@ -32,7 +32,7 @@ function Room({ socket, user, room }: RoomProps) {
   useEffect(() => {
     socket.emit("req_segments");
     socket.off("res_segments").on("res_segments", () => {
-      fetch(`${import.meta.env.VITE_BACKEND_URL}/api/segment/${room}`)
+      fetch(`${import.meta.env.VITE_BACKEND_URL}/api/segment/${room_id}`)
         .then((response) => {
           if (!response.ok) {
             throw new Error("Error loading Segments");
@@ -47,7 +47,7 @@ function Room({ socket, user, room }: RoomProps) {
         });
     });
     socket.off("res_tasks").on("res_tasks", () => {
-      fetch(`${import.meta.env.VITE_BACKEND_URL}/api/task/get/${room}`)
+      fetch(`${import.meta.env.VITE_BACKEND_URL}/api/task/get/${room_id}`)
         .then((response) => {
           if (!response.ok) {
             throw new Error("Error loading Tasks");
@@ -62,7 +62,7 @@ function Room({ socket, user, room }: RoomProps) {
         });
     });
     socket.off("res_chats").on("res_chats", () => {
-      fetch(`${import.meta.env.VITE_BACKEND_URL}/api/chat/${room}`)
+      fetch(`${import.meta.env.VITE_BACKEND_URL}/api/chat/${room_id}`)
         .then((response) => {
           if (!response.ok) {
             throw new Error("Error loading Chats");
@@ -77,7 +77,7 @@ function Room({ socket, user, room }: RoomProps) {
         });
     });
     socket.off("res_users").on("res_users", () => {
-      fetch(`${import.meta.env.VITE_BACKEND_URL}/api/room/users/${room}`)
+      fetch(`${import.meta.env.VITE_BACKEND_URL}/api/room/users/${room_id}`)
         .then((response) => {
           if (!response.ok) {
             throw new Error("Error loading Users");
@@ -92,7 +92,7 @@ function Room({ socket, user, room }: RoomProps) {
           setError(error.message);
         });
     });
-  }, [socket]);
+  }, [socket, room_id]);
 
   // Function to toggle the visibility of the column
   const toggleColumn = () => {
@@ -118,9 +118,9 @@ function Room({ socket, user, room }: RoomProps) {
     const currentTime = new Date();
     const formattedTime = currentTime.toLocaleString(); // Format as per your requirement
 
-    setMessages((prevMessages) => [...prevMessages, { room_name: room, message: `${message}`, username: user, status:'loading' ,createdAt: formattedTime }]);
+    setMessages((prevMessages) => [...prevMessages, { room_name: room_id, message: `${message}`, username: user, status:'loading' ,createdAt: formattedTime }]);
 
-    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/chat/${room}`, {
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/chat/${room_id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -138,7 +138,7 @@ function Room({ socket, user, room }: RoomProps) {
         return response.json();
       })
       .then((data) => {
-        socket.emit("add_chat", { room_name: room });
+        socket.emit("add_chat", { room_name: room_id });
       })
       .catch((error) => {
         // Handle error
@@ -156,7 +156,7 @@ function Room({ socket, user, room }: RoomProps) {
       >
         <div className="offcanvas-header">
           <h5 className="offcanvas-title" id="offcanvasRightLabel">
-            {`${room}'s Chat`}
+            {`${room_id}'s Chat`}
           </h5>
           <button
             type="button"
@@ -177,9 +177,9 @@ function Room({ socket, user, room }: RoomProps) {
       </div>
 
       <div className="row d-flex flex-row justify-content-center p-2">
-        <h1 className="d-flex justify-content-center p-3">{`${room}`}</h1>
+        <h1 className="d-flex justify-content-center p-3">{`${room_id}`}</h1>
         <div className=" col-md-8  mr-5" style={{ height: "85vh" }}>
-          <TODO segments={segments} socket={socket} tasks={tasks} room={room} />
+          <TODO segments={segments} socket={socket} tasks={tasks} room={room_id} />
         </div>
         {!isSmallScreen && (
           <Chat

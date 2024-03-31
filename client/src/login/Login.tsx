@@ -38,7 +38,6 @@ function Login({ login }: LoginProps) {
       })
       .then((data) => {
         // Handle successful login
-        console.log("Login successful:", data);
         login(data.user.name);
         navigate("/home");
         // Redirect user or update state as needed

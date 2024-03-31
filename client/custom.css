@@ -4,7 +4,6 @@
 /* Your custom overrides */
 [data-bs-theme=dark] {
   --bs-body-bg: #1c1f22; /* Change the body background color */
-  --bs-secondary-bg: #ff0000; /* Change the secondary background color */
   --bs-primary-text-emphasis: #6ea8fe; /* Change the primary text emphasis color */
   --bs-link-color: #e5e5e5; /* Change the link color */
   --bs-link-hover-color: #bbbbbb; /* Change the link hover color */
@@ -63,4 +62,12 @@
   width: 100vw;
   height: 100vh;
   background-color: rgba(0, 0, 0);
+}
+
+#sideBarCard:hover {
+  background-color: #8181812c;
+}
+
+#sideBarCard:active {
+  background-color: #a1a1a165;
 }

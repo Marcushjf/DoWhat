@@ -9,20 +9,12 @@ import { useNavigate } from "react-router-dom";
 interface HomeProps {
   userid: string;
   socket: Socket;
-  join: (room_name:string) => void
+  rooms: any[]
 }
 
-interface Room {
-  room_name: string;
-  size: number;
-}
-
-
-function Home({ userid, socket, join }: HomeProps) {
-  const [rooms, setRooms] = useState<Room[]>([]);
+function Home({ userid, socket, rooms }: HomeProps) {
   const [error, setError] = useState("");
   const [notif, setNotif] = useState("");
-  const [showModal, setShowModal] = useState(false);
   const [showNotif, setShowNotif] = useState(false);
   const navigate = useNavigate()
 
@@ -32,13 +24,6 @@ function Home({ userid, socket, join }: HomeProps) {
     }
   },[userid])
 
-  const handleCreateRoom = () => {
-    setShowModal(true);
-  };
-
-  const handleCloseModal = () => {
-    setShowModal(false);
-  };
 
   const handleJoinModal = (roomName: string, password: string) => {
     fetch(`${import.meta.env.VITE_BACKEND_URL}/api/room/join`, {
@@ -105,46 +90,11 @@ function Home({ userid, socket, join }: HomeProps) {
         setShowNotif(true);
         setError(error.message);
       });
-    setShowModal(false);
   };
 
-
-  useEffect(() => {
-    socket.emit("req_rooms");
-    socket.off("res_rooms").on("res_rooms", () => {
-      fetch(`${import.meta.env.VITE_BACKEND_URL}/api/occupant/${userid}`)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Error loading Rooms");
-          }
-          return response.json();
-        })
-        .then((data) => {
-          setRooms(data);
-          console.log(data)
-        })
-        .catch((error) => {
-          setError(error.message);
-        });
-    });
-    socket.off("init").on("init", () => {
-      fetch(`${import.meta.env.VITE_BACKEND_URL}/api/occupant/${userid}`)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Error loading Rooms");
-          }
-          return response.json();
-        })
-        .then((data) => {
-          setRooms(data);
-          const roomNames = data.map((item:Room) => item.room_name);
-          socket.emit('socket_connect',roomNames)
-        })
-        .catch((error) => {
-          setError(error.message);
-        });
-    });
-  }, [socket]);
+  function join(room_name:string) {
+    navigate(`/room/${room_name}`)
+  }
   
   return (
     <Fragment>
