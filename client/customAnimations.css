@@ -13,13 +13,62 @@
 @keyframes fade-up {
     0% {
         opacity: 0;
-        transform: translateY(30px) scale(0.8);
+        transform: translateY(30px) scale(0.95);
     }
     100% {
         opacity: 1;
         transform: translateY(0px) scale(1);
     }
 }
+
+@keyframes slide-down-animation {
+    from {
+        max-height: 0;
+        opacity: 0;
+    }
+    to {
+        max-height: 400px;
+        opacity: 1;
+    }
+}
+
+@keyframes slide-up-animation {
+    from {
+        max-height: 400px;
+        opacity: 1;
+    }
+    to {
+        max-height: 0;
+        opacity: 0;
+    }
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fade-out {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+#fadeIn {
+    animation: fade-in 0.5s;
+}
+
+#fadeOut {
+    animation: fade-out 0.5s;
+}
+
 
 #fadeUp {
     animation: fade-up 0.5s
@@ -29,12 +78,22 @@
     animation: fade-down 0.5s;
 }
 
+
 #roomCard {
     opacity: 0; /* Initially invisible */
     animation: fade-up 0.5s forwards;
     animation-delay: 0.2s; /* Adjust the delay time as needed */
 }
 
-#dropDown {
-    animation: fade-down 0.5s;
+.slide-down {
+    animation: slide-down-animation 0.5s ease-in-out forwards;
+    max-height: 400px;
 }
+
+.slide-up {
+    animation: slide-up-animation 0.5s ease-in-out forwards;
+    max-height: 0;
+    overflow: hidden;
+}
+
+

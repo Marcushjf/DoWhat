@@ -48,7 +48,7 @@ function RoomCard({ room, socket, userid, join }: RoomCardProps) {
   
     return (
       <Fragment>
-        <div className="card">
+        <div className="card" id="hoverCard">
         <div className="card-body">
           <div className="row">
             <h5 className="card-title col">{`Room: ${room.room_name}`}</h5>

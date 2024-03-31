@@ -141,60 +141,45 @@ interface CollapseProp {
 }
 
 function Collapse({ rooms }: CollapseProp) {
-    const [show, setShow] = useState(false)
-    const [fade, setFade] = useState('fadeUp')
+    const [isVisible, setIsVisible] = useState(false);
 
-    function handleAnimation(){
-        setShow(prevShow => !prevShow)
-        if(fade === 'fadeDown'){
-            setFade('fadeUp')
-            return
-        }
-        setFade('fadeDown')
+    // Toggle visibility of the collapse content
+    function toggleVisibility() {
+        setIsVisible(prev => !prev);
     }
+
+    // CSS class based on visibility state
+    const collapseClass = isVisible ? 'slide-down' : 'slide-up';
 
     return (
         <Fragment>
-            <div className="flex-column w-100 ps-5 pt-3 pb-3 ms-2" style={{ cursor: 'pointer' }} onClick={handleAnimation}>
+            <div className="flex-column w-100 ps-5 pt-3 pb-3 ms-2" style={{ cursor: 'pointer' }} onClick={toggleVisibility}>
                 <span className="fs-6 pe-3">Rooms</span>
-                <i className="bi bi-arrow-right-short"></i>
+                {isVisible ? (<i className="bi bi-arrow-down-short"></i>): (<i className="bi bi-arrow-right-short"></i>)}
             </div>
-            {!show ? (
-                <div>
-                    <hr className="text-secondary m-0 ms-4 me-4" />
-                </div>
-            ) : (
-                <div className="flex-column" style={{ maxHeight: '400px', overflowY: 'auto' }} id={`${fade}`}>
-                    {!(rooms.length === 0) ? (
-                        rooms.map((room) => (
-                            <Fragment key={room.room_name}>
-                                <hr className="text-secondary m-0 ms-4 me-4" />
-                                <Link to={`/room/${room.room_name}`} className="nav-link">
-                                    <div
-                                        className="p-2 ps-5 flex-column justify-content-center"
-                                        style={{ cursor: 'pointer' }}
-                                        id="sideBarCard"
-                                    >
-                                        {room.room_name}
-                                    </div>
-                                </Link>
-                            </Fragment>
-                        ))
-                    ) : (
-                        <Fragment>
-                            <div className="p-2 ps-5 flex-column justify-content-center">
-                                Not in any Rooms <i className="bi bi-emoji-dizzy ms-3"></i>
-                            </div>
+            <div className={`flex-column ${collapseClass}`} style={{ maxHeight: '400px', overflowY: 'auto' }}>
+                {!(rooms.length === 0) ? (
+                    rooms.map((room) => (
+                        <Fragment key={room.room_name}>
+                            <hr className="text-secondary m-0 ms-4 me-4" />
+                            <Link to={`/room/${room.room_name}`} className="nav-link">
+                                <div className="p-2 ps-5 flex-column justify-content-center" style={{ cursor: 'pointer' }} id="sideBarCard">
+                                    {room.room_name}
+                                </div>
+                            </Link>
                         </Fragment>
-                    )}
-                </div>
-            )}
-
-
+                    ))
+                ) : (
+                    <Fragment>
+                        <div className="p-2 ps-5 flex-column justify-content-center">
+                            Not in any Rooms <i className="bi bi-emoji-dizzy ms-3"></i>
+                        </div>
+                    </Fragment>
+                )}
+            </div>
         </Fragment>
-
-
-    )
+    );
 }
+
 
 export default SideBar

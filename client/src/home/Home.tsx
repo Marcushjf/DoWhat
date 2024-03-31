@@ -100,7 +100,7 @@ function Home({ userid, socket, rooms }: HomeProps) {
     <Fragment>
       <div className="container mt-5">
         <div id="fadeDown">
-          <h1 >{`Welcome back ${userid}`}</h1>
+          <h1 className="pb-3">{`Welcome back ${userid}`}</h1>
           <form>
             <button
               type="button"

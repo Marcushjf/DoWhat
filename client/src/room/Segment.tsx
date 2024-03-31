@@ -117,7 +117,7 @@ function Segment({ segment, tasks, socket }: SegmentProps) {
 
 
   return (
-    <div className="border p-2 position-relative rounded-4" style={{ backgroundColor: '#1c1f22' }}>
+    <div className="border p-2 position-relative rounded-4" style={{ backgroundColor: '#1c1f22' }} id="fadeIn">
       <div className="dropdown position-absolute top-0 end-0 m-3">
         <button
           className="btn"
