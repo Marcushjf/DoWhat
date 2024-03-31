@@ -67,7 +67,7 @@ function Register() {
   }
 
   return (
-    <div className="container">
+    <div className="container" id="fadeDown">
       <div className="row justify-content-center mt-5">
         <div className="col-md-6">
           <div className="card">

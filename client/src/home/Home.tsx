@@ -18,11 +18,11 @@ function Home({ userid, socket, rooms }: HomeProps) {
   const [showNotif, setShowNotif] = useState(false);
   const navigate = useNavigate()
 
-  useEffect(()=>{
-    if(!userid){
+  useEffect(() => {
+    if (!userid) {
       navigate('/')
     }
-  },[userid])
+  }, [userid])
 
 
   const handleJoinModal = (roomName: string, password: string) => {
@@ -38,20 +38,20 @@ function Home({ userid, socket, rooms }: HomeProps) {
       })
       .then((data) => {
         //room does not exist
-        if(data.message === "Room does not exist."){
+        if (data.message === "Room does not exist.") {
           setNotif(data.message);
           setShowNotif(true);
           return
         }
         //password incorrect
-        if(data.message === "Password Incorrect."){
+        if (data.message === "Password Incorrect.") {
           setNotif(data.message);
           setShowNotif(true);
           return
         }
         setNotif("Successfully joined room");
         setShowNotif(true);
-        socket.emit("join", {username:userid, room_name:roomName});
+        socket.emit("join", { username: userid, room_name: roomName });
       })
       .catch((error) => {
         // Handle login error
@@ -74,14 +74,14 @@ function Home({ userid, socket, rooms }: HomeProps) {
         return response.json();
       })
       .then((data) => {
-        if(data.message === "Room already exists."){
+        if (data.message === "Room already exists.") {
           setNotif(data.message);
           setShowNotif(true);
           return
         }
         setNotif("Successfully created room");
         setShowNotif(true);
-        socket.emit("join", {username:userid, room_name:roomName});
+        socket.emit("join", { username: userid, room_name: roomName });
         console.log(data);
       })
       .catch((error) => {
@@ -92,37 +92,40 @@ function Home({ userid, socket, rooms }: HomeProps) {
       });
   };
 
-  function join(room_name:string) {
+  function join(room_name: string) {
     navigate(`/room/${room_name}`)
   }
-  
+
   return (
     <Fragment>
       <div className="container mt-5">
-        <h1>{`Welcome back ${userid}`}</h1>
-        <form>
-          <button
-            type="button"
-            className="btn btn-primary me-2"
-            data-bs-toggle="modal" data-bs-target="#join"
-          >
-            Join Room
-          </button>
-          <button
-            type="button"
-            className="btn btn-success"
-            data-bs-toggle="modal" data-bs-target="#create"
-          >
-            Create Room
-          </button>
-        </form>
+        <div id="fadeDown">
+          <h1 >{`Welcome back ${userid}`}</h1>
+          <form>
+            <button
+              type="button"
+              className="btn btn-primary me-2"
+              data-bs-toggle="modal" data-bs-target="#join"
+            >
+              Join Room
+            </button>
+            <button
+              type="button"
+              className="btn btn-success"
+              data-bs-toggle="modal" data-bs-target="#create"
+            >
+              Create Room
+            </button>
+          </form>
+        </div>
+
         <div className="mt-4">
-          <h2>Your Rooms</h2>
+          <h2 className="p-3">Your Rooms</h2>
           {error && <div className="alert alert-danger">{error}</div>}
           <div className="row row-cols-1 row-cols-md-3 g-4">
             {rooms.map((room, index) => (
-              <div key={index} className="col">
-                <RoomCard room={room} socket={socket} userid={userid} join={join}/>
+              <div key={index} className="col" id="roomCard">
+                <RoomCard room={room} socket={socket} userid={userid} join={join} />
               </div>
             ))}
           </div>

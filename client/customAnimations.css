@@ -1,0 +1,40 @@
+/*Keyframes*/
+@keyframes fade-down {
+    0% {
+        opacity: 0;
+        transform: translateY(-30px) scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0px) scale(1);
+    }
+}
+
+@keyframes fade-up {
+    0% {
+        opacity: 0;
+        transform: translateY(30px) scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0px) scale(1);
+    }
+}
+
+#fadeUp {
+    animation: fade-up 0.5s
+}
+
+#fadeDown {
+    animation: fade-down 0.5s;
+}
+
+#roomCard {
+    opacity: 0; /* Initially invisible */
+    animation: fade-up 0.5s forwards;
+    animation-delay: 0.2s; /* Adjust the delay time as needed */
+}
+
+#dropDown {
+    animation: fade-down 0.5s;
+}

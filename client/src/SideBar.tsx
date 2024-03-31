@@ -41,25 +41,25 @@ function SideBar({ rooms }: SideBarProp) {
                         </Link>
                         <hr className="text-secondary m-0" />
                         <ul className="nav nav-pills flex-column pt-3 pb-3" id="parentM">
-                            <li className="nav-item p-2 ps-4">
+                            <li className="nav-item p-2 ps-4" data-bs-toggle="offcanvas">
                                 <Link to="/home" className="nav-link">
                                     <i className="bi bi-house me-2 fs-5"></i>
                                     <span className="fs-5">Home</span>
                                 </Link>
                             </li>
-                            <li className="nav-item p-2 ps-4">
+                            <li className="nav-item p-2 ps-4" data-bs-toggle="offcanvas">
                                 <Link to="/" className="nav-link">
                                     <i className="bi bi-speedometer me-2 fs-5"></i>
                                     <span className="fs-5">WIP</span>
                                 </Link>
                             </li>
-                            <li className="nav-item p-2 ps-4">
+                            <li className="nav-item p-2 ps-4" data-bs-toggle="offcanvas">
                                 <Link to="/" className="nav-link">
                                     <i className="bi bi-speedometer me-2 fs-5"></i>
                                     <span className="fs-5">WIP</span>
                                 </Link>
                             </li>
-                            <li className="nav-item p-2 ps-4">
+                            <li className="nav-item p-2 ps-4" data-bs-toggle="offcanvas">
                                 <Link to="/" className="nav-link">
                                     <i className="bi bi-speedometer me-2 fs-5"></i>
                                     <span className="fs-5">WIP</span>
@@ -142,9 +142,20 @@ interface CollapseProp {
 
 function Collapse({ rooms }: CollapseProp) {
     const [show, setShow] = useState(false)
+    const [fade, setFade] = useState('fadeUp')
+
+    function handleAnimation(){
+        setShow(prevShow => !prevShow)
+        if(fade === 'fadeDown'){
+            setFade('fadeUp')
+            return
+        }
+        setFade('fadeDown')
+    }
+
     return (
         <Fragment>
-            <div className="flex-column w-100 ps-5 pt-3 pb-3 ms-2" style={{ cursor: 'pointer' }} onClick={() => setShow(prevShow => !prevShow)}>
+            <div className="flex-column w-100 ps-5 pt-3 pb-3 ms-2" style={{ cursor: 'pointer' }} onClick={handleAnimation}>
                 <span className="fs-6 pe-3">Rooms</span>
                 <i className="bi bi-arrow-right-short"></i>
             </div>
@@ -153,7 +164,7 @@ function Collapse({ rooms }: CollapseProp) {
                     <hr className="text-secondary m-0 ms-4 me-4" />
                 </div>
             ) : (
-                <div className="flex-column" style={{ maxHeight: '400px', overflowY: 'auto' }}>
+                <div className="flex-column" style={{ maxHeight: '400px', overflowY: 'auto' }} id={`${fade}`}>
                     {!(rooms.length === 0) ? (
                         rooms.map((room) => (
                             <Fragment key={room.room_name}>
