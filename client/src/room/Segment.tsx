@@ -145,7 +145,7 @@ function Segment({ segment, tasks, socket }: SegmentProps) {
       </div>
 
       <h3 className="p-3">{segment.segment_name}</h3>
-      {segment.deadline && <h5>{`Deadline : ${segment.deadline}`}</h5>}
+      {segment.deadline && <h5 className="p-3">{`Deadline : ${segment.deadline}`}</h5>}
       <div className="task-list">
         {tasks.map((task, index) => (
           <TaskCard key={index} task={task} socket={socket} />

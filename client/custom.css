@@ -75,3 +75,27 @@
 #sideBarCollapse:hover {
   background-color: #8181812c;
 }
+
+#taskCard:hover {
+
+}
+
+.nav-underline{
+  position: relative;
+}
+
+.nav-underline:after {
+  content: '';
+  height: 2px;
+  width: 100%;
+  background: #6ea8fe;
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  opacity: 0;
+}
+
+.nav-underline:hover:after {
+  opacity: 1;
+}
+

@@ -83,25 +83,25 @@ function SideBar({ rooms }: SideBarProp) {
                         <li className="nav-item p-2 ps-4">
                             <Link to="/home" className="nav-link">
                                 <i className="bi bi-house me-2 fs-5"></i>
-                                <span className="fs-5">Home</span>
+                                <span className="fs-5 nav-underline">Home</span>
                             </Link>
                         </li>
                         <li className="nav-item p-2 ps-4">
-                            <Link to="/" className="nav-link">
+                            <Link to="/home" className="nav-link">
                                 <i className="bi bi-speedometer me-2 fs-5"></i>
-                                <span className="fs-5">WIP</span>
+                                <span className="fs-5 nav-underline">WIP</span>
                             </Link>
                         </li>
                         <li className="nav-item p-2 ps-4">
-                            <Link to="/" className="nav-link">
+                            <Link to="/home" className="nav-link">
                                 <i className="bi bi-speedometer me-2 fs-5"></i>
-                                <span className="fs-5">WIP</span>
+                                <span className="fs-5 nav-underline">WIP</span>
                             </Link>
                         </li>
                         <li className="nav-item p-2 ps-4">
-                            <Link to="/" className="nav-link">
+                            <Link to="/home" className="nav-link">
                                 <i className="bi bi-speedometer me-2 fs-5"></i>
-                                <span className="fs-5">WIP</span>
+                                <span className="fs-5 nav-underline">WIP</span>
                             </Link>
                         </li>
                     </ul>
@@ -109,14 +109,14 @@ function SideBar({ rooms }: SideBarProp) {
                     <Collapse rooms={rooms} />
                 </div>}
 
-            {isSmallScreen && 
+            {isSmallScreen &&
                 <button
                     className="btn text-light position-fixed top-0 start-0"
                     type="button"
                     data-bs-toggle="offcanvas"
                     data-bs-target="#offcanvasSideBar"
                     aria-controls="offcanvasSideBar"
-                    style={{ height: '50px', width: '50px', zIndex:2000}}
+                    style={{ height: '50px', width: '50px', zIndex: 2000 }}
                 >
                     <i className="bi bi-layout-sidebar"></i>
                 </button>
@@ -125,8 +125,8 @@ function SideBar({ rooms }: SideBarProp) {
                 <button
                     className="btn text-light position-fixed top-0 start-0"
                     type="button"
-                    onClick={()=>{setShow(prevShow=>!prevShow)}}
-                    style={{ height: '50px', width: '50px', zIndex:2000}}
+                    onClick={() => { setShow(prevShow => !prevShow) }}
+                    style={{ height: '50px', width: '50px', zIndex: 2000 }}
                 >
                     <i className="bi bi-layout-sidebar"></i>
                 </button>
@@ -154,8 +154,8 @@ function Collapse({ rooms }: CollapseProp) {
     return (
         <Fragment>
             <div className="flex-column w-100 ps-5 pt-3 pb-3 ms-2" style={{ cursor: 'pointer' }} onClick={toggleVisibility}>
-                <span className="fs-6 pe-3">Rooms</span>
-                {isVisible ? (<i className="bi bi-arrow-down-short"></i>): (<i className="bi bi-arrow-right-short"></i>)}
+                <span className="fs-6 nav-underline">Rooms</span>
+                {isVisible ? (<i className="bi bi-arrow-down-short ps-3"></i>) : (<i className="bi bi-arrow-right-short ps-3"></i>)}
             </div>
             <div className={`flex-column ${collapseClass}`} style={{ maxHeight: '400px', overflowY: 'auto' }}>
                 {!(rooms.length === 0) ? (

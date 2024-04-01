@@ -52,10 +52,9 @@ function Login({ login }: LoginProps) {
   }
 
   return (
-    <div className="d-flex flex-column h-100 justify-content-center" id="fadeUp">
-      <div className="row justify-content-center mt-5">
-        <div className="col-md-6">
-          <div className="card">
+    <div className="d-flex align-items-center" id="fadeIn">
+      <div className="row justify-content-center m-0 p-0">
+          <div className="card" style={{maxWidth:'500px'}}>
             <div
               className="card-header d-flex align-items-center justify-content-center"
               style={{ height: "100px" }}
@@ -116,8 +115,6 @@ function Login({ login }: LoginProps) {
               </form>
             </div>
           </div>
-        </div>
-        {/* <div className="col-md-6 d-none d-md-block">hi</div> */}
       </div>
     </div>
   );

@@ -85,7 +85,7 @@ function TaskCard({ task, socket}: TaskCardProps) {
 
   return (
     <Fragment>
-      <div className="border rounded-3 p-2 m-1 mt-3 mb-3 row justify-content-between bg-light text-dark">
+      <div className="border rounded-3 p-2 m-1 mt-3 mb-3 row justify-content-between bg-light text-dark" id="taskCard">
       <div className="col-9 row p-0 m-0 justify-content-between" data-bs-toggle="modal" data-bs-target={`#info${task._id}`} style={{ cursor: 'pointer'}}>
         <div className="col p-1" style={{ minWidth: "150px" }}>
           {task.task_name.length > 15

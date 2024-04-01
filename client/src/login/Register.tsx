@@ -55,7 +55,7 @@ function Register() {
       .then((data) => {
         // Handle successful login
         console.log("Register successful:", data);
-        navigate("/");
+        navigate("/main");
       })
       .catch((error) => {
         // Handle login error
@@ -130,7 +130,7 @@ function Register() {
                 </div>
                 <div className="text-center">
                   <p>
-                    Already have an account? <Link to="/">Login here</Link>
+                    Already have an account? <Link to="/main">Login here</Link>
                   </p>
                 </div>
               </form>

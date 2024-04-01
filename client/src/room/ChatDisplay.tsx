@@ -16,7 +16,7 @@ function ChatDisplay({ messages, user }: ChatDisplayProps) {
           className={`row ps-1 pe-1 m-0 justify-content-between text-start text-${text_col}`}
           style={{ width: "100%", position: "relative" }}
         >
-          <p className="col-5">{`${createdAt.getHours().toString().padStart(2, '0')}:${createdAt.getMinutes().toString().padStart(2, '0')}\u00a0\u00a0${item.username.slice(0, 6)} : `}</p>
+          <p className="col-5">{`${createdAt.getHours().toString().padStart(2, '0')}:${createdAt.getMinutes().toString().padStart(2, '0')}\u00a0\u00a0${(text_col === 'primary') ? ('You') : (item.username.slice(0, 6))} : `}</p>
           <p
             className="col-7"
             style={{ wordWrap: "break-word", whiteSpace: "pre-wrap" }}
