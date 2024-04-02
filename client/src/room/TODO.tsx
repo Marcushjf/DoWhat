@@ -5,12 +5,11 @@ import DragDropContextWrapper from "../drag&drop/DragDropContextWrapper";
 
 interface TODOProps {
   segments: any[];
-  tasks: any[];
   socket: Socket;
   room?: string
 }
 
-const TODO = ({ segments, tasks, socket, room }: TODOProps) => {
+const TODO = ({ segments, socket, room }: TODOProps) => {
   const [newSegmentName, setNewSegmentName] = useState("");
   const [newSegmentDeadline, setNewSegmentDeadline] = useState("");
   const [error, setError] = useState("")
@@ -77,7 +76,6 @@ const TODO = ({ segments, tasks, socket, room }: TODOProps) => {
               <Segment
                 socket={socket}
                 segment={segment}
-                tasks={tasks.filter((task) => task.segment_id === segment._id)} // Filter tasks for current segment
               />
             </div>
           ))}

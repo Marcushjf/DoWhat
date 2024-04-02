@@ -14,7 +14,6 @@ interface RoomProps {
 function Room({ socket, user}: RoomProps) {
   const [messages, setMessages] = useState<any[]>([]);
   const [segments, setSegments] = useState<any[]>([]);
-  const [tasks, setTasks] = useState<any[]>([]);
   const [users, setUsers] = useState<any[]>([]);
   const [error, setError] = useState([]);
   const [showColumn, setShowColumn] = useState(true);
@@ -41,21 +40,6 @@ function Room({ socket, user}: RoomProps) {
         })
         .then((data) => {
           setSegments(data);
-        })
-        .catch((error) => {
-          setError(error.message);
-        });
-    });
-    socket.off("res_tasks").on("res_tasks", () => {
-      fetch(`${import.meta.env.VITE_BACKEND_URL}/api/task/get/${room_id}`)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Error loading Tasks");
-          }
-          return response.json();
-        })
-        .then((data) => {
-          setTasks(data);
         })
         .catch((error) => {
           setError(error.message);
@@ -179,7 +163,7 @@ function Room({ socket, user}: RoomProps) {
       <div className="row d-flex flex-row justify-content-center p-2">
         <h1 className="d-flex justify-content-center p-3">{`${room_id}`}</h1>
         <div className=" col-md-8  mr-5" style={{ height: "85vh" }}>
-          <TODO segments={segments} socket={socket} tasks={tasks} room={room_id} />
+          <TODO segments={segments} socket={socket} room={room_id} />
         </div>
         {!isSmallScreen && (
           <Chat

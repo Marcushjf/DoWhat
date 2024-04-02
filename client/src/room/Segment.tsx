@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TaskCard from "./TaskCard";
 import { Socket } from "socket.io-client";
 import { EditModal } from "./SegmentModals";
@@ -9,15 +9,40 @@ import DragDropContextWrapper from "../drag&drop/DragDropContextWrapper";
 
 interface SegmentProps {
   segment: any;
-  tasks: any[];
   socket: Socket;
 }
 
-function Segment({ segment, tasks, socket }: SegmentProps) {
+function Segment({ segment, socket }: SegmentProps) {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showInput, setShowInput] = useState(false);
   const [newTaskName, setNewTaskName] = useState("");
   const [error, setError] = useState("");
+  const [tasks, setTasks] = useState<any[]>([])
+
+  useEffect(()=>{
+    const taskIds = segment.tasks
+    console.log(taskIds)
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/task/${segment._id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Error editing segment.");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setTasks(data)
+      })
+      .catch((error) => {
+        // Handle error
+        setError(error.message);
+      });
+    setShowEditModal(false);
+  },[segment])
 
   const handleEdit = () => {
     setShowEditModal(true);
@@ -80,7 +105,7 @@ function Segment({ segment, tasks, socket }: SegmentProps) {
         return response.json();
       })
       .then((data) => {
-        socket.emit("add_task", { room_name: segment.room_name });
+        socket.emit("add_segment", { room_name: segment.room_name });
       })
       .catch((error) => {
         // Handle error

@@ -30,7 +30,7 @@ function TaskCard({ task, socket}: TaskCardProps) {
         return response.json();
       })
       .then((data) => {
-        socket.emit("add_task", { room_name: task.room_name });
+        socket.emit("add_segment", { room_name: task.room_name });
       })
       .catch((error) => {
         // Handle error
@@ -49,7 +49,7 @@ function TaskCard({ task, socket}: TaskCardProps) {
         return response.json();
       })
       .then((data) => {
-        socket.emit("add_task", { room_name: task.room_name });
+        socket.emit("add_segment", { room_name: task.room_name });
       })
       .catch((error) => {
         // Handle login error
