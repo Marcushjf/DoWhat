@@ -77,6 +77,27 @@ const updateSegment = async (req,res)=>{
     }
 }
 
+const updateOrderSegment = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // Construct the update object with only the tasks field
+        const update = { tasks: req.body.tasks };
+
+        // Find and update the Segment document
+        const segment = await Segment.findByIdAndUpdate(id, update, { new: true });
+
+        if (!segment) {
+            return res.status(404).json({ message: 'Segment Not Found' });
+        }
+
+        res.status(200).json(segment);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+
 
 module.exports = {
     getSegments,

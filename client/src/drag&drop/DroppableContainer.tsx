@@ -9,7 +9,7 @@ interface DroppableContainerProps {
 
 const DroppableContainer: React.FC<DroppableContainerProps> = ({ droppableId, children }) => {
   return (
-    <Droppable droppableId={droppableId}>
+    <Droppable droppableId={droppableId} type='group'>
       {(provided: DroppableProvided) => (
         <div ref={provided.innerRef} {...provided.droppableProps}>
           {children}

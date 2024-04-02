@@ -61,8 +61,36 @@ const TODO = ({ segments, socket, room }: TODOProps) => {
   };
 
   const handleDragEnd = (results: any) => {
-    // Handle drag end logic here
-    console.log(results)
+    const {source, destination, type} = results
+    //if no destination
+    if(!destination){
+      console.log('Huh Where you dropping this?')
+      return
+    }
+    //if same position
+    if(source.index === destination.index && source.droppableId === destination.droppableId){
+      console.log('Same position')
+      return
+    }
+
+    if(type === 'group'){
+      // Find the source and destination segments
+      const sourceSegment = segments.find(segment => segment._id === source.droppableId);
+      const destinationSegment = segments.find(segment => segment._id === destination.droppableId);
+
+      if(sourceSegment._id === destinationSegment._id){
+        console.log(sourceSegment.segment_name)
+        const taskList = [...sourceSegment.tasks]
+        const [removedTask] = taskList.splice(source.index,1)
+        taskList.splice(destination.index, 0, removedTask)
+        console.log(taskList)
+      }
+      else{
+        console.log(destinationSegment.segment_name)
+        console.log('diff segment')
+      }
+    }
+    //console.log(source, destination)
   };
 
 

@@ -21,7 +21,7 @@ function Segment({ segment, socket }: SegmentProps) {
 
   useEffect(()=>{
     const taskIds = segment.tasks
-    console.log(taskIds)
+    //console.log(taskIds)
     fetch(`${import.meta.env.VITE_BACKEND_URL}/api/task/${segment._id}`, {
       method: "GET",
       headers: {
