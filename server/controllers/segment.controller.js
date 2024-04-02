@@ -91,7 +91,7 @@ const updateOrderSegment = async (req, res) => {
             return res.status(404).json({ message: 'Segment Not Found' });
         }
 
-        res.status(200).json(segment);
+        res.status(200).json(segment.tasks);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -104,5 +104,6 @@ module.exports = {
     addSegment,
     deleteAllSegments,
     deleteSegment,
-    updateSegment
+    updateSegment,
+    updateOrderSegment
 }

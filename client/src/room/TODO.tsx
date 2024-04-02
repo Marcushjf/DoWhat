@@ -79,11 +79,29 @@ const TODO = ({ segments, socket, room }: TODOProps) => {
       const destinationSegment = segments.find(segment => segment._id === destination.droppableId);
 
       if(sourceSegment._id === destinationSegment._id){
-        console.log(sourceSegment.segment_name)
         const taskList = [...sourceSegment.tasks]
         const [removedTask] = taskList.splice(source.index,1)
         taskList.splice(destination.index, 0, removedTask)
-        console.log(taskList)
+        //update client first
+
+        //update order
+        fetch(`${import.meta.env.VITE_BACKEND_URL}/api/segment/order/${sourceSegment._id}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ tasks: taskList }),
+        })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Error updating order.');
+            }
+            return response.json();
+          })
+          .then((data) => {
+
+            socket.emit('add_segment', ({ room_name: room }))
+          })
       }
       else{
         console.log(destinationSegment.segment_name)

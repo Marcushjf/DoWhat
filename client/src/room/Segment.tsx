@@ -3,7 +3,7 @@ import TaskCard from "./TaskCard";
 import { Socket } from "socket.io-client";
 import { EditModal } from "./SegmentModals";
 import { ConfirmationModal } from "../modals/Confirmation";
-import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd"
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import DroppableContainer from "../drag&drop/DroppableContainer";
 import DragDropContextWrapper from "../drag&drop/DragDropContextWrapper";
 
@@ -17,11 +17,10 @@ function Segment({ segment, socket }: SegmentProps) {
   const [showInput, setShowInput] = useState(false);
   const [newTaskName, setNewTaskName] = useState("");
   const [error, setError] = useState("");
-  const [tasks, setTasks] = useState<any[]>([])
+  const [tasks, setTasks] = useState<any[]>([]);
 
-  useEffect(()=>{
-    const taskIds = segment.tasks
-    //console.log(taskIds)
+  useEffect(() => {
+    const taskIds = segment.tasks;
     fetch(`${import.meta.env.VITE_BACKEND_URL}/api/task/${segment._id}`, {
       method: "GET",
       headers: {
@@ -35,14 +34,18 @@ function Segment({ segment, socket }: SegmentProps) {
         return response.json();
       })
       .then((data) => {
-        setTasks(data)
+        // Reorder tasks based on taskIds
+        const reorderedTasks = taskIds.map((taskId: string) =>
+          data.find((task: any) => task._id === taskId)
+        );
+        setTasks(reorderedTasks);
       })
       .catch((error) => {
         // Handle error
         setError(error.message);
       });
     setShowEditModal(false);
-  },[segment])
+  }, [segment]);
 
   const handleEdit = () => {
     setShowEditModal(true);
@@ -134,8 +137,8 @@ function Segment({ segment, socket }: SegmentProps) {
       })
       .then((data) => {
         // Handle successful login
-        console.log(data)
-        socket.emit('add_segment', { room_name: segment.room_name });
+        console.log(data);
+        socket.emit("add_segment", { room_name: segment.room_name });
       })
       .catch((error) => {
         // Handle login error
@@ -143,10 +146,12 @@ function Segment({ segment, socket }: SegmentProps) {
       });
   };
 
-
   return (
-    
-      <div className="border p-2 position-relative rounded-4" style={{ backgroundColor: '#1c1f22' }} id="fadeIn">
+    <div
+      className="border p-2 position-relative rounded-4"
+      style={{ backgroundColor: "#1c1f22" }}
+      id="fadeIn"
+    >
       <div className="dropdown position-absolute top-0 end-0 m-3">
         <button
           className="btn"
@@ -158,7 +163,11 @@ function Segment({ segment, socket }: SegmentProps) {
         </button>
         <ul className="dropdown-menu">
           <li>
-            <button className="dropdown-item" data-bs-toggle="modal" data-bs-target={`#edit${segment._id}`}>
+            <button
+              className="dropdown-item"
+              data-bs-toggle="modal"
+              data-bs-target={`#edit${segment._id}`}
+            >
               Edit
             </button>
           </li>
@@ -166,7 +175,11 @@ function Segment({ segment, socket }: SegmentProps) {
             <hr className="dropdown-divider" />
           </li>
           <li>
-            <button className="dropdown-item" data-bs-toggle="modal" data-bs-target={`#remove${segment._id}`}>
+            <button
+              className="dropdown-item"
+              data-bs-toggle="modal"
+              data-bs-target={`#remove${segment._id}`}
+            >
               Remove
             </button>
           </li>
@@ -174,14 +187,20 @@ function Segment({ segment, socket }: SegmentProps) {
       </div>
 
       <h3 className="p-3">{segment.segment_name}</h3>
-      {segment.deadline && <h5 className="p-3">{`Deadline : ${segment.deadline}`}</h5>}
+      {segment.deadline && (
+        <h5 className="p-3">{`Deadline : ${segment.deadline}`}</h5>
+      )}
       <DroppableContainer droppableId={segment._id}>
         {tasks.map((task, index) => (
           <Draggable draggableId={task._id} key={task._id} index={index}>
-            {(provided)=>(
-              <div {...provided.dragHandleProps} {...provided.draggableProps} ref={provided.innerRef}>
+            {(provided) => (
+              <div
+                {...provided.dragHandleProps}
+                {...provided.draggableProps}
+                ref={provided.innerRef}
+              >
                 <TaskCard task={task} socket={socket} />
-              </div>  
+              </div>
             )}
           </Draggable>
         ))}
@@ -190,12 +209,32 @@ function Segment({ segment, socket }: SegmentProps) {
       <div className="p-2">
         {showInput ? (
           <div className="hstack gap-2">
-            <input className="form-control p-1 m-0 ps-2" type="text" placeholder="Task name" aria-label="Task name" value={newTaskName} onChange={handleInputChange} />
-            <button type="button" className="btn btn-secondary p-1" style={{ width: '50px' }} onClick={handleSubmit}>Add</button>
+            <input
+              className="form-control p-1 m-0 ps-2"
+              type="text"
+              placeholder="Task name"
+              aria-label="Task name"
+              value={newTaskName}
+              onChange={handleInputChange}
+            />
+            <button
+              type="button"
+              className="btn btn-secondary p-1"
+              style={{ width: "50px" }}
+              onClick={handleSubmit}
+            >
+              Add
+            </button>
             <div className="vr"></div>
-            <button type="button" className="btn btn-outline-danger p-1" style={{ width: '50px' }} onClick={handleCancel}><i className="bi bi-x-lg"></i></button>
+            <button
+              type="button"
+              className="btn btn-outline-danger p-1"
+              style={{ width: "50px" }}
+              onClick={handleCancel}
+            >
+              <i className="bi bi-x-lg"></i>
+            </button>
           </div>
-
         ) : (
           <button
             className="btn btn-secondary w-100 p-2 rounded-pill"
@@ -209,11 +248,18 @@ function Segment({ segment, socket }: SegmentProps) {
 
       <div>
         {/* Modals */}
-        <EditModal onEditSegment={handleEditSegment} segment={segment} id={`edit${segment._id}`}/>
-        <ConfirmationModal onConfirmRemove={handleConfirmRemove} id={`remove${segment._id}`} message="remove segment" />
+        <EditModal
+          onEditSegment={handleEditSegment}
+          segment={segment}
+          id={`edit${segment._id}`}
+        />
+        <ConfirmationModal
+          onConfirmRemove={handleConfirmRemove}
+          id={`remove${segment._id}`}
+          message="remove segment"
+        />
       </div>
     </div>
-    
   );
 }
 
