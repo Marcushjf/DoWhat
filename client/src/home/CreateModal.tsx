@@ -23,6 +23,12 @@ const CreateRoomModal: React.FC<CreateRoomModalProps> = ({
       setError("Passwords do not match.");
       return;
     }
+
+    if(roomName.length > 15){
+      setError("Room name too long")
+      return
+    }
+
     onSubmit(roomName, password);
     const closeButton = document.querySelector(`#${id} .btn-close`) as HTMLButtonElement;
     if (closeButton) {
