@@ -3,6 +3,9 @@ import TaskCard from "./TaskCard";
 import { Socket } from "socket.io-client";
 import { EditModal } from "./SegmentModals";
 import { ConfirmationModal } from "../modals/Confirmation";
+import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd"
+import DroppableContainer from "../drag&drop/DroppableContainer";
+import DragDropContextWrapper from "../drag&drop/DragDropContextWrapper";
 
 interface SegmentProps {
   segment: any;
@@ -115,9 +118,14 @@ function Segment({ segment, tasks, socket }: SegmentProps) {
       });
   };
 
+  const handleDragEnd = (results: any) => {
+    // Handle drag end logic here
+    console.log(results)
+  };
 
   return (
-    <div className="border p-2 position-relative rounded-4" style={{ backgroundColor: '#1c1f22' }} id="fadeIn">
+    <DragDropContextWrapper onDragEnd={handleDragEnd}>
+      <div className="border p-2 position-relative rounded-4" style={{ backgroundColor: '#1c1f22' }} id="fadeIn">
       <div className="dropdown position-absolute top-0 end-0 m-3">
         <button
           className="btn"
@@ -146,11 +154,17 @@ function Segment({ segment, tasks, socket }: SegmentProps) {
 
       <h3 className="p-3">{segment.segment_name}</h3>
       {segment.deadline && <h5 className="p-3">{`Deadline : ${segment.deadline}`}</h5>}
-      <div className="task-list">
+      <DroppableContainer droppableId="ROOT">
         {tasks.map((task, index) => (
-          <TaskCard key={index} task={task} socket={socket} />
+          <Draggable draggableId={task._id} key={task._id} index={index}>
+            {(provided)=>(
+              <div {...provided.dragHandleProps} {...provided.draggableProps} ref={provided.innerRef}>
+                <TaskCard task={task} socket={socket} />
+              </div>  
+            )}
+          </Draggable>
         ))}
-      </div>
+      </DroppableContainer>
 
       <div className="p-2">
         {showInput ? (
@@ -178,6 +192,8 @@ function Segment({ segment, tasks, socket }: SegmentProps) {
         <ConfirmationModal onConfirmRemove={handleConfirmRemove} id={`remove${segment._id}`} message="remove segment" />
       </div>
     </div>
+    </DragDropContextWrapper>
+    
   );
 }
 

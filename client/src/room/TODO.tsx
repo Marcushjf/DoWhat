@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Socket } from "socket.io-client";
 import Segment from "./Segment";
+import DragDropContextWrapper from "../drag&drop/DragDropContextWrapper";
 
 interface TODOProps {
   segments: any[];
@@ -61,24 +62,26 @@ const TODO = ({ segments, tasks, socket, room }: TODOProps) => {
   };
 
   return (
-    <div className="container border rounded-3 h-100 pt-3 ps-0 pe-0" style={{ backgroundColor: 'rgba(80, 80, 80, 0.2)' }}>
-      <div className="row flex-nowrap overflow-auto w-100 h-100 m-0">
-        {segments.map((segment, index) => (
-          <div key={index} className="" style={{ width: "380px" }}>
-            <Segment
-              socket={socket}
-              segment={segment}
-              tasks={tasks.filter((task) => task.segment_id === segment._id)} // Filter tasks for current segment
-            />
+    <>
+      <div className="container border rounded-3 h-100 pt-3 ps-0 pe-0" style={{ backgroundColor: 'rgba(80, 80, 80, 0.2)' }}>
+        <div className="row flex-nowrap overflow-auto w-100 h-100 m-0">
+          {segments.map((segment, index) => (
+            <div key={index} className="" style={{ width: "380px" }}>
+              <Segment
+                socket={socket}
+                segment={segment}
+                tasks={tasks.filter((task) => task.segment_id === segment._id)} // Filter tasks for current segment
+              />
+            </div>
+          ))}
+          <div style={{ width: "365px" }}>
+            <button
+              className="btn btn-secondary ps-2 pe-2 w-100"
+              data-bs-toggle="modal" data-bs-target={`#addSeg${room}`}
+            >
+              <i className="bi bi-plus-lg"></i>Add a Goal/Objective
+            </button>
           </div>
-        ))}
-        <div style={{ width: "365px" }}>
-          <button
-            className="btn btn-secondary ps-2 pe-2 w-100"
-            data-bs-toggle="modal" data-bs-target={`#addSeg${room}`}
-          >
-            <i className="bi bi-plus-lg"></i>Add a Goal/Objective
-          </button>
         </div>
       </div>
 
@@ -133,8 +136,7 @@ const TODO = ({ segments, tasks, socket, room }: TODOProps) => {
           </div>
         </div>
       </div>
-
-    </div>
+    </>
   );
 };
 
