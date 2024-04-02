@@ -118,13 +118,9 @@ function Segment({ segment, tasks, socket }: SegmentProps) {
       });
   };
 
-  const handleDragEnd = (results: any) => {
-    // Handle drag end logic here
-    console.log(results)
-  };
 
   return (
-    <DragDropContextWrapper onDragEnd={handleDragEnd}>
+    
       <div className="border p-2 position-relative rounded-4" style={{ backgroundColor: '#1c1f22' }} id="fadeIn">
       <div className="dropdown position-absolute top-0 end-0 m-3">
         <button
@@ -154,7 +150,7 @@ function Segment({ segment, tasks, socket }: SegmentProps) {
 
       <h3 className="p-3">{segment.segment_name}</h3>
       {segment.deadline && <h5 className="p-3">{`Deadline : ${segment.deadline}`}</h5>}
-      <DroppableContainer droppableId="ROOT">
+      <DroppableContainer droppableId={segment._id}>
         {tasks.map((task, index) => (
           <Draggable draggableId={task._id} key={task._id} index={index}>
             {(provided)=>(
@@ -192,7 +188,6 @@ function Segment({ segment, tasks, socket }: SegmentProps) {
         <ConfirmationModal onConfirmRemove={handleConfirmRemove} id={`remove${segment._id}`} message="remove segment" />
       </div>
     </div>
-    </DragDropContextWrapper>
     
   );
 }

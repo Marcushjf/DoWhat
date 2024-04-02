@@ -61,8 +61,15 @@ const TODO = ({ segments, tasks, socket, room }: TODOProps) => {
     setError(``) // Reset error message
   };
 
+  const handleDragEnd = (results: any) => {
+    // Handle drag end logic here
+    console.log(results)
+  };
+
+
   return (
     <>
+    <DragDropContextWrapper onDragEnd={handleDragEnd}>
       <div className="container border rounded-3 h-100 pt-3 ps-0 pe-0" style={{ backgroundColor: 'rgba(80, 80, 80, 0.2)' }}>
         <div className="row flex-nowrap overflow-auto w-100 h-100 m-0">
           {segments.map((segment, index) => (
@@ -136,6 +143,7 @@ const TODO = ({ segments, tasks, socket, room }: TODOProps) => {
           </div>
         </div>
       </div>
+      </DragDropContextWrapper>
     </>
   );
 };
