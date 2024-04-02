@@ -90,6 +90,9 @@ function Segment({ segment, socket }: SegmentProps) {
   const handleSubmit = () => {
     // Submit the new task name
     // Reset state
+    if(newTaskName.length > 20){
+      return
+    }
     fetch(`${import.meta.env.VITE_BACKEND_URL}/api/task/`, {
       method: "POST",
       headers: {

@@ -17,6 +17,14 @@ const TaskModal: React.FC<TaskModalProps> = ({ show, onClose, onSubmit, task }) 
       setError("Task name is required.");
       return;
     }
+    if(taskName.length > 20) {
+      setError("Task name too Long")
+      return
+    }
+    if(description.length > 150) {
+      setError("Description too long")
+      return
+    }
     onSubmit(taskName, description);
     setError("");
     onClose();

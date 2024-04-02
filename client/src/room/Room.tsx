@@ -15,7 +15,7 @@ function Room({ socket, user}: RoomProps) {
   const [messages, setMessages] = useState<any[]>([]);
   const [segments, setSegments] = useState<any[]>([]);
   const [users, setUsers] = useState<any[]>([]);
-  const [error, setError] = useState([]);
+  const [error, setError] = useState('');
   const [showColumn, setShowColumn] = useState(true);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
 
@@ -99,6 +99,14 @@ function Room({ socket, user}: RoomProps) {
 
   function handleSend (message: string) {
 
+    if(message.length > 30) {
+      setError('Message Too long')
+      return
+    }
+    else{
+      setError('')
+    }
+
     const currentTime = new Date();
     const formattedTime = currentTime.toLocaleString(); // Format as per your requirement
 
@@ -156,6 +164,7 @@ function Room({ socket, user}: RoomProps) {
             messages={messages}
             handleSend={handleSend}
             small={isSmallScreen}
+            error={error}
           />
         </div>
       </div>
@@ -172,6 +181,7 @@ function Room({ socket, user}: RoomProps) {
             messages={messages}
             handleSend={handleSend}
             small={isSmallScreen}
+            error={error}
           />
         )}
       </div>
@@ -199,9 +209,10 @@ interface ChatProp {
   users: any[];
   handleSend: (message: string) => void;
   small: boolean
+  error: string
 }
 
-function Chat({ user, users, messages, handleSend, small }: ChatProp) {
+function Chat({ user, users, messages, handleSend, small, error }: ChatProp) {
   return (
     <div
       className="p-0 d-flex flex-column align-items-center m-0"
@@ -229,7 +240,7 @@ function Chat({ user, users, messages, handleSend, small }: ChatProp) {
         <ChatDisplay messages={messages} user={user} />
       </div>
       <div className="w-100">
-        <ChatBox onSend={handleSend} />
+        <ChatBox onSend={handleSend} error={error}/>
       </div>
     </div>
   );

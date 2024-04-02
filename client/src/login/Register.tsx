@@ -25,14 +25,14 @@ function Register() {
     }
 
     //check if username is at least 4 characters long
-    if(name.length < 4){
-        setError(`Username must be at least 4 characters long`)
+    if(name.length < 4 || name.length > 15){
+        setError(`Username must be 4 - 15 characters long`)
         return
     }
 
     //check if password is at least 6 characters long
-    if(password.length < 6){
-        setError(`Password must be at least 6 characters long`)
+    if(password.length < 6 || password.length > 20){
+        setError(`Password must be 6 - 20 characters long`)
         return
     }
 

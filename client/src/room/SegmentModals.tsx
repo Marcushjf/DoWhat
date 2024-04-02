@@ -16,11 +16,16 @@ export const EditModal: React.FC<EditModalProps> = ({ onEditSegment, segment, id
       setError("Segment name is required.");
       return;
     }
+    if(segmentName.length > 15){
+      setError("Segment name too long")
+      return
+    }
     onEditSegment(segmentName, deadline);
     const closeButton = document.querySelector(`#${id} .btn-close`) as HTMLButtonElement;
     if (closeButton) {
       closeButton.click();
     }
+    setError('')
   };
 
   return (

@@ -2,6 +2,7 @@ import { useState } from "react";
 
 interface ChatBoxProps {
   onSend : (message : string) => void
+  error: string
 }
 
 function ChatBox(prop : ChatBoxProps) {
@@ -29,7 +30,7 @@ function ChatBox(prop : ChatBoxProps) {
       <input
         type="text"
         className="form-control"
-        placeholder="Enter message ..."
+        placeholder={prop.error ? `Error: ${prop.error}` : 'Enter message ...'}
         aria-label="Enter message ..."
         aria-describedby="basic-addon1"
         id="message_input"

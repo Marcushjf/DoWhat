@@ -28,6 +28,11 @@ const TODO = ({ segments, socket, room }: TODOProps) => {
       return;
     }
 
+    if(newSegmentName.length > 15) {
+      setError("Segment name too long")
+      return
+    }
+
     fetch(`${import.meta.env.VITE_BACKEND_URL}/api/segment/`, {
       method: "POST",
       headers: {
