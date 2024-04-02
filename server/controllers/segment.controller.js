@@ -1,4 +1,5 @@
 const {Segment} = require('../models/Segment')
+const {Task} = require('../models/Task')
 
 // Get segments from room
 const getSegments = async (req, res) => {

@@ -1,3 +1,4 @@
+const { Segment } = require('../models/Segment');
 const {Task} = require('../models/Task')
 
 // Get Tasks from Room
@@ -22,18 +23,33 @@ const getTasks = async (req, res) => {
     }
 }
 
-const addTask = async (req,res) => {
+const addTask = async (req, res) => {
     const { task_name, segment_id, room_name } = req.body;
     try {
-        const task = await Task.create({task_name:task_name, segment_id:segment_id, room_name:room_name});
-        if(!task){
-            return res.status(404).json({ message: "failed to create task" })
+        // Find the segment by its ID
+        const segment = await Segment.findById(segment_id);
+        if (!segment) {
+            return res.status(404).json({ message: "Failed to find segment" });
         }
+        
+        // Create a new task
+        const task = await Task.create({ task_name, segment_id, room_name });
+        if (!task) {
+            return res.status(404).json({ message: "Failed to create task" });
+        }
+        
+        // Push the new task's ID to the tasks array in the segment document
+        segment.tasks.push(task._id);
+        
+        // Save the updated segment document
+        await segment.save();
+        
         res.status(200).json(task);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 }
+
 
 const deleteAllTasks = async (req, res) => {
     try {

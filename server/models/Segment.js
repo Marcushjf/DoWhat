@@ -17,6 +17,10 @@ const SegmentSchema = mongoose.Schema(
         completion:{
             type: Boolean,
             default: false,
+        },
+        tasks:{
+            type: Array,
+            default:[]
         }
     },
 )
