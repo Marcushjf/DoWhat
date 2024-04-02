@@ -19,7 +19,7 @@ const SegmentSchema = mongoose.Schema(
             default: false,
         },
         tasks:{
-            type: Array,
+            type: [String],
             default:[]
         }
     },

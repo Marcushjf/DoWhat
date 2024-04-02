@@ -107,6 +107,19 @@ const deleteTaskById = async (req,res) => {
         if (!updatedTask) {
             return res.status(404).json({ message: 'Task not found' });
         }
+         // Find the segment containing the task list
+         const segmentId = updatedTask.segment_id;
+         const segment = await Segment.findById(segmentId);
+         if (!segment) {
+             return res.status(404).json({ message: 'Segment containing the task not found' });
+         }
+
+         // Remove the ID of the deleted task from the task list array
+        segment.tasks.pull(id);
+
+        // Save the updated segment to the database
+        await segment.save();
+
         res.status(200).json({message:'Task Deleted'})
     } catch (error) {
         res.status(500).json({ message: error.message });
