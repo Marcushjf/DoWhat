@@ -7,9 +7,10 @@ interface TODOProps {
   segments: any[];
   socket: Socket;
   room?: string;
+  tasks:any[]
 }
 
-const TODO = ({ segments, socket, room }: TODOProps) => {
+const TODO = ({ segments, socket, room, tasks }: TODOProps) => {
   const [newSegmentName, setNewSegmentName] = useState("");
   const [newSegmentDeadline, setNewSegmentDeadline] = useState("");
   const [error, setError] = useState("");
@@ -70,73 +71,8 @@ const TODO = ({ segments, socket, room }: TODOProps) => {
     setError(``); // Reset error message
   };
 
-  const handleDragEnd = (results: any) => {
-    const { source, destination, type } = results;
-    //if no destination
-    if (!destination) {
-      console.log("Huh Where you dropping this?");
-      return;
-    }
-    //if same position
-    if (
-      source.index === destination.index &&
-      source.droppableId === destination.droppableId
-    ) {
-      console.log("Same position");
-      return;
-    }
-
-    if (type === "group") {
-      // Find the source and destination segments
-      const sourceSegment = segments.find(
-        (segment) => segment._id === source.droppableId
-      );
-      const destinationSegment = segments.find(
-        (segment) => segment._id === destination.droppableId
-      );
-    
-      if (sourceSegment._id === destinationSegment._id) {
-        const taskList = [...sourceSegment.tasks];
-        const [removedTask] = taskList.splice(source.index, 1);
-        taskList.splice(destination.index, 0, removedTask);
-    
-        // Update order on the server
-        fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/api/segment/order/${
-            sourceSegment._id
-          }`,
-          {
-            method: "PATCH",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ tasks: taskList }),
-          }
-        )
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error("Error updating order.");
-            }
-            return response.json();
-          })
-          .then((data) => {
-            socket.emit("add_segment", { room_name: room });
-          })
-          .catch((error) => {
-            console.error("Error updating order:", error);
-          });
-      } else {
-        console.log(destinationSegment.segment_name);
-        console.log("diff segment");
-      }
-    }
-    
-    //console.log(source, destination)
-  };
-
   return (
     <>
-      <DragDropContextWrapper onDragEnd={handleDragEnd}>
         <div
           className="container border rounded-3 h-100 pt-3 ps-0 pe-0"
           style={{ backgroundColor: "rgba(80, 80, 80, 0.2)" }}
@@ -144,7 +80,7 @@ const TODO = ({ segments, socket, room }: TODOProps) => {
           <div className="row flex-nowrap overflow-auto w-100 h-100 m-0">
             {segments.map((segment, index) => (
               <div key={index} className="" style={{ width: "380px" }}>
-                <Segment socket={socket} segment={segment} />
+                <Segment socket={socket} segment={segment} tasks={tasks}/>
               </div>
             ))}
             <div style={{ width: "365px" }}>
@@ -227,7 +163,6 @@ const TODO = ({ segments, socket, room }: TODOProps) => {
             </div>
           </div>
         </div>
-      </DragDropContextWrapper>
     </>
   );
 };

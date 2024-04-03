@@ -10,42 +10,23 @@ import DragDropContextWrapper from "../drag&drop/DragDropContextWrapper";
 interface SegmentProps {
   segment: any;
   socket: Socket;
+  tasks: any[]
 }
 
-function Segment({ segment, socket }: SegmentProps) {
+function Segment({ segment, socket, tasks }: SegmentProps) {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showInput, setShowInput] = useState(false);
   const [newTaskName, setNewTaskName] = useState("");
   const [error, setError] = useState("");
-  const [tasks, setTasks] = useState<any[]>([]);
+  const [ordered, setOrdered] = useState<any[]>([])
+  const taskIds = segment.tasks
 
   useEffect(() => {
-    const taskIds = segment.tasks;
-    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/task/${segment._id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Error editing segment.");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        // Reorder tasks based on taskIds
-        const reorderedTasks = taskIds.map((taskId: string) =>
-          data.find((task: any) => task._id === taskId)
+    const reorderedTasks = taskIds.map((taskId: string) =>
+          tasks.find((task: any) => task._id === taskId)
         );
-        setTasks(reorderedTasks);
-      })
-      .catch((error) => {
-        // Handle error
-        setError(error.message);
-      });
-    setShowEditModal(false);
-  }, [segment]);
+        setOrdered(reorderedTasks)
+  }, [taskIds]);
 
   const handleEdit = () => {
     setShowEditModal(true);
@@ -194,7 +175,7 @@ function Segment({ segment, socket }: SegmentProps) {
         <h5 className="p-3">{`Deadline : ${segment.deadline}`}</h5>
       )}
       <DroppableContainer droppableId={segment._id}>
-        {tasks.map((task, index) => (
+        {ordered.map((task, index) => (
           <Draggable draggableId={task._id} key={task._id} index={index}>
             {(provided) => (
               <div
