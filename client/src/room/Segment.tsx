@@ -10,7 +10,7 @@ import DragDropContextWrapper from "../drag&drop/DragDropContextWrapper";
 interface SegmentProps {
   segment: any;
   socket: Socket;
-  tasks: any[]
+  tasks: any[];
 }
 
 function Segment({ segment, socket, tasks }: SegmentProps) {
@@ -18,15 +18,15 @@ function Segment({ segment, socket, tasks }: SegmentProps) {
   const [showInput, setShowInput] = useState(false);
   const [newTaskName, setNewTaskName] = useState("");
   const [error, setError] = useState("");
-  const [ordered, setOrdered] = useState<any[]>([])
-  const taskIds = segment.tasks
+  const [ordered, setOrdered] = useState<any[]>([]);
+  const taskIds = segment.tasks;
 
   useEffect(() => {
     const reorderedTasks = taskIds.map((taskId: string) =>
-          tasks.find((task: any) => task._id === taskId)
-        );
-        setOrdered(reorderedTasks)
-  }, [taskIds]);
+      tasks.find((task: any) => task._id === taskId)
+    );
+    setOrdered(reorderedTasks);
+  }, [segment]);
 
   const handleEdit = () => {
     setShowEditModal(true);
@@ -71,8 +71,8 @@ function Segment({ segment, socket, tasks }: SegmentProps) {
   const handleSubmit = () => {
     // Submit the new task name
     // Reset state
-    if(newTaskName.length > 20){
-      return
+    if (newTaskName.length > 20) {
+      return;
     }
     fetch(`${import.meta.env.VITE_BACKEND_URL}/api/task/`, {
       method: "POST",
