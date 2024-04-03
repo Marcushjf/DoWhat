@@ -13,12 +13,6 @@ const TODO = ({ segments, socket, room }: TODOProps) => {
   const [newSegmentName, setNewSegmentName] = useState("");
   const [newSegmentDeadline, setNewSegmentDeadline] = useState("");
   const [error, setError] = useState("");
-  const copy = [...segments]
-  const [wat, setSegments] = useState(copy)
-
-  useEffect(()=>{
-    setSegments(copy)
-  },[copy])
 
   // Function to handle submission of the new segment
   const handleAddSegment = () => {
@@ -106,18 +100,6 @@ const TODO = ({ segments, socket, room }: TODOProps) => {
         const [removedTask] = taskList.splice(source.index, 1);
         taskList.splice(destination.index, 0, removedTask);
     
-        // Update the client-side state
-        const updatedSegments = segments.map((segment) => {
-          if (segment._id === sourceSegment._id) {
-            return {
-              ...segment,
-              tasks: taskList,
-            };
-          }
-          return segment;
-        });
-        setSegments(updatedSegments);
-    
         // Update order on the server
         fetch(
           `${import.meta.env.VITE_BACKEND_URL}/api/segment/order/${
@@ -142,17 +124,6 @@ const TODO = ({ segments, socket, room }: TODOProps) => {
           })
           .catch((error) => {
             console.error("Error updating order:", error);
-            // Revert the client-side state if the server update fails
-            const revertedSegments = segments.map((segment) => {
-              if (segment._id === sourceSegment._id) {
-                return {
-                  ...segment,
-                  tasks: sourceSegment.tasks,
-                };
-              }
-              return segment;
-            });
-            setSegments(revertedSegments);
           });
       } else {
         console.log(destinationSegment.segment_name);
@@ -171,7 +142,7 @@ const TODO = ({ segments, socket, room }: TODOProps) => {
           style={{ backgroundColor: "rgba(80, 80, 80, 0.2)" }}
         >
           <div className="row flex-nowrap overflow-auto w-100 h-100 m-0">
-            {wat.map((segment, index) => (
+            {segments.map((segment, index) => (
               <div key={index} className="" style={{ width: "380px" }}>
                 <Segment socket={socket} segment={segment} />
               </div>

@@ -13,7 +13,7 @@ function SideBar({ rooms }: SideBarProp) {
     const [show, setShow] = useState(true)
     // Function to check if screen width is too small
     const checkScreenSize = () => {
-        setIsSmallScreen(window.innerWidth < 1577);
+        setIsSmallScreen(window.innerWidth < 1500);
     };
 
     // Add event listener to check screen size on mount and window resize
@@ -72,7 +72,7 @@ function SideBar({ rooms }: SideBarProp) {
                 </div>
             </div>
             {(!isSmallScreen && show) &&
-                <div className="d-flex flex-column bg-body justify-content-space-between vh-100" style={{ width: '320px', position: 'relative' }}>
+                <div className="d-flex flex-column bg-body justify-content-space-between vh-100" style={{ width: '290px', position: 'relative' }}>
                     <button type="button" className="btn text-light" id="sideBarCollapse" onClick={() => { setShow(prevShow => !prevShow) }} style={{ position: 'absolute', right: 3, top: 3, width: '50px', height: '50px' }}><i className="bi bi-layout-sidebar"></i></button>
                     <Link to="/home" className="d-flex p-4 ms-3 ">
                         <i className="bi bi-bootstrap fs-5 me-2"></i>

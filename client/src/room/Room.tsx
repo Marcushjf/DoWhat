@@ -171,7 +171,7 @@ function Room({ socket, user}: RoomProps) {
 
       <div className="row d-flex flex-row justify-content-center p-2">
         <h1 className="d-flex justify-content-center p-3">{`${room_id}`}</h1>
-        <div className=" col-md-8  mr-5" style={{ height: "85vh" }}>
+        <div className=" col-md-7  mr-5" style={{ height: "85vh" }}>
           <TODO segments={segments} socket={socket} room={room_id} />
         </div>
         {!isSmallScreen && (
