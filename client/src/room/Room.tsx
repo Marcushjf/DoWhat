@@ -5,21 +5,19 @@ import { Socket } from "socket.io-client";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import TODO from "./TODO";
-import DragDropContextWrapper from "../drag&drop/DragDropContextWrapper";
 
 interface RoomProps {
   socket: Socket;
   user: string;
 }
 
-function Room({ socket, user }: RoomProps) {
+function Room({ socket, user}: RoomProps) {
   const [messages, setMessages] = useState<any[]>([]);
   const [segments, setSegments] = useState<any[]>([]);
   const [users, setUsers] = useState<any[]>([]);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [showColumn, setShowColumn] = useState(true);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
-  const [tasks, setTasks] = useState<any[]>([]);
 
   const navigate = useNavigate();
   const { room_id } = useParams<{ room_id?: string }>();
@@ -42,19 +40,6 @@ function Room({ socket, user }: RoomProps) {
         })
         .then((data) => {
           setSegments(data);
-        })
-        .catch((error) => {
-          setError(error.message);
-        });
-      fetch(`${import.meta.env.VITE_BACKEND_URL}/api/task/get/${room_id}`)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Error loading Segments");
-          }
-          return response.json();
-        })
-        .then((data) => {
-          setTasks(data);
         })
         .catch((error) => {
           setError(error.message);
@@ -112,27 +97,20 @@ function Room({ socket, user }: RoomProps) {
     };
   }, []);
 
-  function handleSend(message: string) {
-    if (message.length > 30) {
-      setError("Message Too long");
-      return;
-    } else {
-      setError("");
+  function handleSend (message: string) {
+
+    if(message.length > 30) {
+      setError('Message Too long')
+      return
+    }
+    else{
+      setError('')
     }
 
     const currentTime = new Date();
     const formattedTime = currentTime.toLocaleString(); // Format as per your requirement
 
-    setMessages((prevMessages) => [
-      ...prevMessages,
-      {
-        room_name: room_id,
-        message: `${message}`,
-        username: user,
-        status: "loading",
-        createdAt: formattedTime,
-      },
-    ]);
+    setMessages((prevMessages) => [...prevMessages, { room_name: room_id, message: `${message}`, username: user, status:'loading' ,createdAt: formattedTime }]);
 
     fetch(`${import.meta.env.VITE_BACKEND_URL}/api/chat/${room_id}`, {
       method: "POST",
@@ -142,6 +120,7 @@ function Room({ socket, user }: RoomProps) {
       body: JSON.stringify({
         message: message,
         username: user,
+
       }),
     })
       .then((response) => {
@@ -158,77 +137,6 @@ function Room({ socket, user }: RoomProps) {
         setError(error.message);
       });
   }
-
-  const handleDragEnd = (results: any) => {
-    const { source, destination, type } = results;
-    //if no destination
-    if (!destination) {
-      console.log("Huh Where you dropping this?");
-      return;
-    }
-    //if same position
-    if (
-      source.index === destination.index &&
-      source.droppableId === destination.droppableId
-    ) {
-      console.log("Same position");
-      return;
-    }
-
-    if (type === "group") {
-      // Find the source and destination segments
-      const sourceSegmentIndex = segments.findIndex(
-        (segment) => segment._id === source.droppableId
-      );
-      const destinationSegmentIndex = segments.findIndex(
-        (segment) => segment._id === destination.droppableId
-      );
-
-      if (sourceSegmentIndex === destinationSegmentIndex) {
-        const updatedSegments = [...segments];
-        const taskList = [...updatedSegments[sourceSegmentIndex].tasks];
-        const [removedTask] = taskList.splice(source.index, 1);
-        taskList.splice(destination.index, 0, removedTask);
-
-        // Update client side order
-        updatedSegments[sourceSegmentIndex] = {
-          ...updatedSegments[sourceSegmentIndex],
-          tasks: taskList,
-        };
-
-        setSegments(updatedSegments); // Update client state
-
-        // Update order on the server
-        fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/api/segment/order/${
-            updatedSegments[sourceSegmentIndex]._id
-          }`,
-          {
-            method: "PATCH",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ tasks: taskList }),
-          }
-        )
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error("Error updating order.");
-            }
-            return response.json();
-          })
-          .then((data) => {
-            socket.emit("add_segment", { room_name: room_id });
-          })
-          .catch((error) => {
-            console.error("Error updating order:", error);
-          });
-      } else {
-        console.log("Different segment");
-      }
-    }
-}
-
 
   return (
     <Fragment>
@@ -263,16 +171,9 @@ function Room({ socket, user }: RoomProps) {
 
       <div className="row d-flex flex-row justify-content-center p-2">
         <h1 className="d-flex justify-content-center p-3">{`${room_id}`}</h1>
-        <DragDropContextWrapper onDragEnd={handleDragEnd}>
-          <div className=" col-md-7  mr-5" style={{ height: "85vh" }}>
-            <TODO
-              segments={segments}
-              socket={socket}
-              room={room_id}
-              tasks={tasks}
-            />
-          </div>
-        </DragDropContextWrapper>
+        <div className=" col-md-7  mr-5" style={{ height: "85vh" }}>
+          <TODO segments={segments} socket={socket} room={room_id} />
+        </div>
         {!isSmallScreen && (
           <Chat
             user={user}
@@ -293,12 +194,7 @@ function Room({ socket, user }: RoomProps) {
           data-bs-toggle="offcanvas"
           data-bs-target="#offcanvasRight"
           aria-controls="offcanvasRight"
-          style={{
-            height: "80px",
-            width: "120px",
-            marginBottom: "50px",
-            marginRight: "50px",
-          }}
+          style={{ height: '80px', width: '120px', marginBottom: '50px', marginRight: '50px' }}
         >
           <i className="bi bi-chat-right-text-fill fs-1"></i>
         </button>
@@ -312,8 +208,8 @@ interface ChatProp {
   messages: any[];
   users: any[];
   handleSend: (message: string) => void;
-  small: boolean;
-  error: string;
+  small: boolean
+  error: string
 }
 
 function Chat({ user, users, messages, handleSend, small, error }: ChatProp) {
@@ -323,30 +219,28 @@ function Chat({ user, users, messages, handleSend, small, error }: ChatProp) {
       style={{ height: "85vh", width: "360px" }}
     >
       {/* Check for screen cutoff */}
-      {!small && (
-        <div
-          className="overflow-hidden text-start w-100 mb-5"
-          style={{ height: "25%" }}
+      {!small && <div
+        className="overflow-hidden text-start w-100 mb-5"
+        style={{ height: "25%" }}
+      >
+        <ul
+          className="list-group overflow-auto"
+          style={{ border: "none", height: "100%" }}
         >
-          <ul
-            className="list-group overflow-auto"
-            style={{ border: "none", height: "100%" }}
-          >
-            <div className="card-header text-center">Users</div>
-            {users.map((user, index) => (
-              <li key={index} className="list-group-item">
-                {user.name}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+          <div className="card-header text-center">Users</div>
+          {users.map((user, index) => (
+            <li key={index} className="list-group-item">
+              {user.name}
+            </li>
+          ))}
+        </ul>
+      </div>}
 
       <div className="hmb-3 w-100 mb-3" style={{ height: "65%" }}>
         <ChatDisplay messages={messages} user={user} />
       </div>
       <div className="w-100">
-        <ChatBox onSend={handleSend} error={error} />
+        <ChatBox onSend={handleSend} error={error}/>
       </div>
     </div>
   );
